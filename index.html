@@ -5,128 +5,242 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>پنل مدیریت ادمین‌ها</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #7209b7;
+            --success: #06d6a0;
+            --danger: #ef476f;
+            --warning: #ffd166;
+            --info: #118ab2;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --background: #ffffff;
+            --surface: #f8f9fa;
+            --text: #212529;
+            --border: #dee2e6;
+            --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
+
+        .dark-mode {
+            --background: #121212;
+            --surface: #1e1e1e;
+            --text: #e6e6e6;
+            --border: #2d2d2d;
+            --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Vazirmatn', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            transition: var(--transition);
         }
         
         body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
             min-height: 100vh;
             padding: 20px;
-            color: #333;
+            color: var(--text);
+            background-color: var(--background);
         }
         
         .container {
-            max-width: 800px;
+            max-width: 900px;
             margin: 0 auto;
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            background: var(--surface);
+            border-radius: 20px;
+            box-shadow: var(--card-shadow);
             overflow: hidden;
         }
         
         .header {
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--info) 100%);
             color: white;
-            padding: 20px;
+            padding: 25px;
             text-align: center;
+            position: relative;
         }
         
         .header h1 {
-            font-size: 24px;
-            margin-bottom: 5px;
+            font-size: 28px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .theme-toggle {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+        }
+
+        .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: rotate(30deg);
         }
         
         .content {
-            padding: 20px;
+            padding: 25px;
         }
         
         .section {
             margin-bottom: 30px;
-            padding: 20px;
-            border: 1px solid #e0e0e0;
-            border-radius: 10px;
-            background: #f9f9f9;
+            padding: 25px;
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            background: var(--surface);
+            box-shadow: var(--card-shadow);
         }
         
         .section h2 {
-            color: #4facfe;
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #4facfe;
+            color: var(--primary);
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--primary);
+            font-size: 22px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
         
         .form-group {
-            margin-bottom: 15px;
+            margin-bottom: 20px;
+            position: relative;
         }
         
         .form-group label {
             display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-            color: #555;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text);
+            font-size: 15px;
         }
         
         .form-group input,
         .form-group select,
         .form-group textarea {
             width: 100%;
-            padding: 12px;
-            border: 2px solid #ddd;
-            border-radius: 8px;
+            padding: 14px 16px;
+            border: 2px solid var(--border);
+            border-radius: 12px;
             font-size: 16px;
-            transition: border-color 0.3s;
+            background: var(--background);
+            color: var(--text);
         }
         
         .form-group input:focus,
         .form-group select:focus,
         .form-group textarea:focus {
-            border-color: #4facfe;
+            border-color: var(--primary);
             outline: none;
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+        }
+
+        .form-group i {
+            position: absolute;
+            left: 15px;
+            top: 43px;
+            color: var(--primary);
+        }
+
+        .form-group.with-icon input {
+            padding-left: 45px;
         }
         
         .btn {
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--info) 100%);
             color: white;
             border: none;
-            padding: 12px 25px;
-            border-radius: 8px;
+            padding: 14px 28px;
+            border-radius: 12px;
             cursor: pointer;
             font-size: 16px;
-            font-weight: bold;
-            transition: transform 0.2s, box-shadow 0.2s;
-            display: inline-block;
-            text-align: center;
-            margin: 5px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 4px 12px rgba(67, 97, 238, 0.25);
         }
         
         .btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(79, 172, 254, 0.4);
+            box-shadow: 0 6px 16px rgba(67, 97, 238, 0.35);
         }
         
         .btn-danger {
-            background: linear-gradient(135deg, #ff758c 0%, #ff7eb3 100%);
+            background: linear-gradient(135deg, var(--danger) 0%, #ff6b6b 100%);
+            box-shadow: 0 4px 12px rgba(239, 71, 111, 0.25);
+        }
+
+        .btn-danger:hover {
+            box-shadow: 0 6px 16px rgba(239, 71, 111, 0.35);
         }
         
         .btn-success {
-            background: linear-gradient(135deg, #56ab2f 0%, #a8e063 100%);
+            background: linear-gradient(135deg, var(--success) 0%, #4cd964 100%);
+            box-shadow: 0 4px 12px rgba(6, 214, 160, 0.25);
+        }
+
+        .btn-success:hover {
+            box-shadow: 0 6px 16px rgba(6, 214, 160, 0.35);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+            box-shadow: none;
+        }
+
+        .btn-outline:hover {
+            background: var(--primary);
+            color: white;
         }
         
         .user-info {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            background: linear-gradient(135deg, var(--secondary) 0%, var(--primary) 100%);
             color: white;
-            padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 20px;
+            padding: 20px;
+            border-radius: 16px;
+            margin-bottom: 25px;
         }
         
+        .user-info h2 {
+            color: white;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+            padding-bottom: 12px;
+            margin-bottom: 15px;
+        }
+
         .user-info p {
-            margin: 5px 0;
+            margin: 10px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-info i {
+            width: 20px;
         }
         
         .hidden {
@@ -135,49 +249,175 @@
         
         .loading {
             text-align: center;
-            padding: 20px;
+            padding: 30px;
+        }
+
+        .loading .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(67, 97, 238, 0.2);
+            border-radius: 50%;
+            border-top-color: var(--primary);
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
         
         .error {
-            background: #ffebee;
-            color: #c62828;
-            padding: 10px;
-            border-radius: 5px;
-            margin: 10px 0;
-            border: 1px solid #ef9a9a;
+            background: rgba(239, 71, 111, 0.1);
+            color: var(--danger);
+            padding: 15px;
+            border-radius: 12px;
+            margin: 15px 0;
+            border: 1px solid rgba(239, 71, 111, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
         
         .success {
-            background: #e8f5e9;
-            color: #2e7d32;
-            padding: 10px;
-            border-radius: 5px;
-            margin: 10px 0;
-            border: 1px solid #a5d6a7;
+            background: rgba(6, 214, 160, 0.1);
+            color: var(--success);
+            padding: 15px;
+            border-radius: 12px;
+            margin: 15px 0;
+            border: 1px solid rgba(6, 214, 160, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
         
         .warning {
-            background: #fff3cd;
-            color: #856404;
-            padding: 10px;
-            border-radius: 5px;
-            margin: 10px 0;
-            border: 1px solid #ffeaa7;
+            background: rgba(255, 209, 102, 0.1);
+            color: var(--warning);
+            padding: 15px;
+            border-radius: 12px;
+            margin: 15px 0;
+            border: 1px solid rgba(255, 209, 102, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .action-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 25px 0;
+        }
+
+        .admin-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: var(--background);
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: var(--card-shadow);
+        }
+
+        .stat-card i {
+            font-size: 28px;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        .stat-card h3 {
+            font-size: 24px;
+            margin-bottom: 5px;
+            color: var(--primary);
+        }
+
+        .stat-card p {
+            color: var(--text);
+            opacity: 0.8;
+            font-size: 14px;
         }
         
         @media (max-width: 768px) {
             .container {
                 margin: 10px;
-                border-radius: 10px;
+                border-radius: 16px;
             }
             
             .header h1 {
-                font-size: 20px;
+                font-size: 22px;
+            }
+
+            .header p {
+                font-size: 14px;
             }
             
             .btn {
                 width: 100%;
                 margin: 5px 0;
+            }
+
+            .action-buttons {
+                grid-template-columns: 1fr;
+            }
+
+            .content {
+                padding: 15px;
+            }
+
+            .section {
+                padding: 20px;
+            }
+        }
+
+        /* انیمیشن‌های صفحه */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section {
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        /* استایل برای حالت دسکتاپ بزرگ */
+        @media (min-width: 1200px) {
+            .container {
+                max-width: 1000px;
+            }
+        }
+
+        /* استایل برای حالت تبلت */
+        @media (max-width: 992px) {
+            .admin-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* استایل برای حالت موبایل */
+        @media (max-width: 576px) {
+            body {
+                padding: 10px;
+            }
+
+            .admin-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .theme-toggle {
+                top: 15px;
+                left: 15px;
+                width: 40px;
+                height: 40px;
+                font-size: 16px;
+            }
+
+            .header {
+                padding: 20px 15px;
             }
         }
     </style>
@@ -185,6 +425,9 @@
 <body>
     <div class="container">
         <div class="header">
+            <button class="theme-toggle" id="themeToggle">
+                <i class="fas fa-moon"></i>
+            </button>
             <h1>🤖 پنل مدیریت ادمین‌ها</h1>
             <p>سیستم مدیریت دسترسی‌های پلتفرم</p>
         </div>
@@ -192,37 +435,44 @@
         <div class="content">
             <!-- صفحه بررسی وضعیت -->
             <div id="checkingPage" class="section">
-                <h2>🔍 در حال بررسی دسترسی‌ها</h2>
-                <p>لطفاً منتظر بمانید...</p>
+                <h2><i class="fas fa-search"></i> در حال بررسی دسترسی‌ها</h2>
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <p>لطفاً منتظر بمانید...</p>
+                </div>
             </div>
             
             <!-- صفحه خطا -->
             <div id="errorPage" class="section hidden">
-                <h2>❌ خطا در دسترسی</h2>
+                <h2><i class="fas fa-exclamation-circle"></i> خطا در دسترسی</h2>
                 <div class="error">
+                    <i class="fas fa-exclamation-circle"></i>
                     <p id="errorMessage"></p>
                 </div>
             </div>
             
             <!-- صفحه لاگین -->
             <div id="loginPage" class="section hidden">
-                <h2>🔐 ورود به سیستم</h2>
-                <div class="form-group">
+                <h2><i class="fas fa-lock"></i> ورود به سیستم</h2>
+                <div class="form-group with-icon">
                     <label for="userId">ایدی عددی کاربر:</label>
+                    <i class="fas fa-user"></i>
                     <input type="number" id="userId" placeholder="مثال: 123456789" readonly />
                 </div>
-                <div class="form-group">
+                <div class="form-group with-icon">
                     <label for="password">رمز عبور:</label>
+                    <i class="fas fa-key"></i>
                     <input type="password" id="password" placeholder="رمز عبور خود را وارد کنید" />
                 </div>
-                <button class="btn" onclick="login()">ورود به سیستم</button>
+                <button class="btn" onclick="login()"><i class="fas fa-sign-in-alt"></i> ورود به سیستم</button>
             </div>
             
             <!-- صفحه تنظیم رمز عبور -->
             <div id="setupPage" class="section hidden">
-                <h2>⚙️ تنظیم رمز عبور</h2>
-                <div class="form-group">
+                <h2><i class="fas fa-cog"></i> تنظیم رمز عبور</h2>
+                <div class="form-group with-icon">
                     <label for="newPassword">رمز عبور جدید:</label>
+                    <i class="fas fa-lock"></i>
                     <input type="password" id="newPassword" placeholder="رمز عبور جدید را وارد کنید" />
                 </div>
                 <div class="form-group">
@@ -237,21 +487,22 @@
                         <option value="نام مدرسه ابتدایی شما؟">نام مدرسه ابتدایی شما؟</option>
                     </select>
                 </div>
-                <div class="form-group">
+                <div class="form-group with-icon">
                     <label for="securityAnswer">پاسخ سوال امنیتی:</label>
+                    <i class="fas fa-shield-alt"></i>
                     <input type="text" id="securityAnswer" placeholder="پاسخ سوال امنیتی را وارد کنید" />
                 </div>
-                <button class="btn btn-success" onclick="setupPassword()">ذخیره تنظیمات</button>
+                <button class="btn btn-success" onclick="setupPassword()"><i class="fas fa-save"></i> ذخیره تنظیمات</button>
             </div>
             
             <!-- صفحه اطلاعات کاربر -->
             <div id="userInfoPage" class="section hidden">
                 <div class="user-info">
-                    <h2>✅ هویت شما تایید شد</h2>
-                    <p><strong>رنک شما:</strong> <span id="userRank"></span></p>
-                    <p><strong>نیم گیم شما:</strong> <span id="userGameName"></span></p>
-                    <p><strong>ایدی عددی شما:</strong> <span id="userUserId"></span></p>
-                    <p><strong>رفرال شما:</strong> <span id="userReferral"></span></p>
+                    <h2><i class="fas fa-check-circle"></i> هویت شما تایید شد</h2>
+                    <p><i class="fas fa-crown"></i><strong>رنک شما:</strong> <span id="userRank"></span></p>
+                    <p><i class="fas fa-gamepad"></i><strong>نیم گیم شما:</strong> <span id="userGameName"></span></p>
+                    <p><i class="fas fa-id-card"></i><strong>ایدی عددی شما:</strong> <span id="userUserId"></span></p>
+                    <p><i class="fas fa-users"></i><strong>رفرال شما:</strong> <span id="userReferral"></span></p>
                 </div>
                 <p style="text-align: center; margin-top: 20px;">
                     بزودی پنل‌های مربوطه برای شما هم در دسترس قرار می‌گیرد.
@@ -260,32 +511,60 @@
             
             <!-- صفحه پنل مدیریت -->
             <div id="adminPanelPage" class="section hidden">
-                <h2>👨‍💼 پنل مدیریت</h2>
+                <h2><i class="fas fa-user-shield"></i> پنل مدیریت</h2>
                 <div class="user-info">
-                    <p><strong>خوش آمدید:</strong> <span id="adminName"></span></p>
-                    <p><strong>رنک شما:</strong> <span id="adminRank"></span></p>
-                    <p><strong>ایدی عددی:</strong> <span id="adminUserId"></span></p>
+                    <p><i class="fas fa-user"></i><strong>خوش آمدید:</strong> <span id="adminName"></span></p>
+                    <p><i class="fas fa-crown"></i><strong>رنک شما:</strong> <span id="adminRank"></span></p>
+                    <p><i class="fas fa-id-card"></i><strong>ایدی عددی:</strong> <span id="adminUserId"></span></p>
+                </div>
+
+                <div class="admin-stats">
+                    <div class="stat-card">
+                        <i class="fas fa-users"></i>
+                        <h3>۲۴۵</h3>
+                        <p>کاربران کل</p>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-user-plus"></i>
+                        <h3>۱۲</h3>
+                        <p>افزوده شده امروز</p>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-shield-alt"></i>
+                        <h3>۸</h3>
+                        <p>ادمین‌ها</p>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-chart-line"></i>
+                        <h3>+۱۸٪</h3>
+                        <p>رشد هفتگی</p>
+                    </div>
                 </div>
                 
-                <div style="margin: 20px 0;">
-                    <button class="btn btn-success" onclick="showAddUserForm()">➕ افزودن کاربر جدید</button>
-                    <button class="btn btn-danger" onclick="showRemoveUserForm()">🗑️ حذف کاربر</button>
+                <div class="action-buttons">
+                    <button class="btn btn-success" onclick="showAddUserForm()"><i class="fas fa-user-plus"></i> افزودن کاربر جدید</button>
+                    <button class="btn btn-danger" onclick="showRemoveUserForm()"><i class="fas fa-user-minus"></i> حذف کاربر</button>
+                    <button class="btn" onclick="showStats()"><i class="fas fa-chart-bar"></i> آمار و گزارشات</button>
+                    <button class="btn btn-outline" onclick="showSettings()"><i class="fas fa-cog"></i> تنظیمات سیستم</button>
                 </div>
             </div>
             
             <!-- فرم افزودن کاربر -->
             <div id="addUserForm" class="section hidden">
-                <h2>➕ افزودن کاربر جدید</h2>
-                <div class="form-group">
+                <h2><i class="fas fa-user-plus"></i> افزودن کاربر جدید</h2>
+                <div class="form-group with-icon">
                     <label for="addUserId">ایدی عددی کاربر:</label>
+                    <i class="fas fa-id-card"></i>
                     <input type="number" id="addUserId" placeholder="مثال: 123456789" />
                 </div>
-                <div class="form-group">
+                <div class="form-group with-icon">
                     <label for="addGameName">نیم گیم:</label>
+                    <i class="fas fa-gamepad"></i>
                     <input type="text" id="addGameName" placeholder="نام در بازی" />
                 </div>
-                <div class="form-group">
+                <div class="form-group with-icon">
                     <label for="addReferral">رفرال:</label>
+                    <i class="fas fa-users"></i>
                     <input type="text" id="addReferral" placeholder="کد رفرال" />
                 </div>
                 <div class="form-group">
@@ -304,19 +583,23 @@
                         <option value="نام مدرسه ابتدایی شما؟">نام مدرسه ابتدایی شما؟</option>
                     </select>
                 </div>
-                <div class="form-group">
+                <div class="form-group with-icon">
                     <label for="addSecurityAnswer">پاسخ سوال امنیتی:</label>
+                    <i class="fas fa-shield-alt"></i>
                     <input type="text" id="addSecurityAnswer" placeholder="پاسخ سوال امنیتی خود را وارد کنید" />
                 </div>
-                <button class="btn btn-success" onclick="addUser()">افزودن کاربر</button>
-                <button class="btn" onclick="hideAddUserForm()">بازگشت</button>
+                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                    <button class="btn btn-success" onclick="addUser()"><i class="fas fa-check"></i> افزودن کاربر</button>
+                    <button class="btn btn-outline" onclick="hideAddUserForm()"><i class="fas fa-arrow-right"></i> بازگشت</button>
+                </div>
             </div>
             
             <!-- فرم حذف کاربر -->
             <div id="removeUserForm" class="section hidden">
-                <h2>🗑️ حذف کاربر</h2>
-                <div class="form-group">
+                <h2><i class="fas fa-user-minus"></i> حذف کاربر</h2>
+                <div class="form-group with-icon">
                     <label for="removeUserId">ایدی عددی کاربر:</label>
+                    <i class="fas fa-id-card"></i>
                     <input type="number" id="removeUserId" placeholder="مثال: 123456789" />
                 </div>
                 <div class="form-group">
@@ -331,16 +614,20 @@
                         <option value="نام مدرسه ابتدایی شما؟">نام مدرسه ابتدایی شما؟</option>
                     </select>
                 </div>
-                <div class="form-group">
+                <div class="form-group with-icon">
                     <label for="removeSecurityAnswer">پاسخ سوال امنیتی:</label>
+                    <i class="fas fa-shield-alt"></i>
                     <input type="text" id="removeSecurityAnswer" placeholder="پاسخ سوال امنیتی خود را وارد کنید" />
                 </div>
-                <button class="btn btn-danger" onclick="removeUser()">حذف пользователя</button>
-                <button class="btn" onclick="hideRemoveUserForm()">بازگشت</button>
+                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                    <button class="btn btn-danger" onclick="removeUser()"><i class="fas fa-trash"></i> حذف کاربر</button>
+                    <button class="btn btn-outline" onclick="hideRemoveUserForm()"><i class="fas fa-arrow-right"></i> بازگشت</button>
+                </div>
             </div>
             
             <!-- وضعیت بارگذاری و پیام‌ها -->
             <div id="loading" class="loading hidden">
+                <div class="spinner"></div>
                 <p>در حال بارگذاری...</p>
             </div>
             
@@ -373,6 +660,33 @@
                 // اگر از مرورگر عادی وارد شده
                 showError('این پنل فقط از طریق تلگرام قابل دسترسی است. لطفاً از طریق ربات تلگرام به این پنل دسترسی پیدا کنید.');
             }
+
+            // تنظیمات حالت تاریک/روشن
+            const themeToggle = document.getElementById('themeToggle');
+            const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+            
+            // بررسی وضعیت ذخیره شده در localStorage
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark' || (!savedTheme && prefersDarkScheme.matches)) {
+                document.body.classList.add('dark-mode');
+                themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+            } else {
+                document.body.classList.remove('dark-mode');
+                themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+            }
+            
+            // افزودن رویداد کلیک برای تغییر تم
+            themeToggle.addEventListener('click', function() {
+                if (document.body.classList.contains('dark-mode')) {
+                    document.body.classList.remove('dark-mode');
+                    localStorage.setItem('theme', 'light');
+                    themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+                } else {
+                    document.body.classList.add('dark-mode');
+                    localStorage.setItem('theme', 'dark');
+                    themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+                }
+            });
         });
         
         // بررسی وضعیت کاربر
@@ -699,6 +1013,15 @@
             setTimeout(() => {
                 messageDiv.classList.add('hidden');
             }, 5000);
+        }
+
+        // توابع جدید برای دکمه‌های اضافی
+        function showStats() {
+            showMessage('این بخش به زودی اضافه خواهد شد.', 'warning');
+        }
+
+        function showSettings() {
+            showMessage('این بخش به زودی اضافه خواهد شد.', 'warning');
         }
     </script>
 </body>
