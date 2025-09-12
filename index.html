@@ -161,6 +161,7 @@
         /* Form Styles */
         .form-group {
             margin-bottom: 20px;
+            position: relative;
         }
 
         .form-label {
@@ -180,12 +181,28 @@
             font-size: 1rem;
             color: var(--text-primary);
             transition: var(--transition);
+            appearance: none;
         }
 
         .form-control:focus {
             outline: none;
             border-color: var(--primary);
             box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.15);
+        }
+
+        .select-wrapper {
+            position: relative;
+        }
+
+        .select-wrapper::after {
+            content: "▼";
+            font-size: 0.8rem;
+            position: absolute;
+            top: 50%;
+            left: 16px;
+            transform: translateY(-50%);
+            pointer-events: none;
+            color: var(--text-secondary);
         }
 
         /* Button Styles */
@@ -233,16 +250,6 @@
 
         .btn-outline:hover {
             background-color: rgba(0, 0, 0, 0.05);
-        }
-
-        .btn-sm {
-            padding: 8px 16px;
-            font-size: 0.875rem;
-        }
-
-        .btn-icon {
-            padding: 10px;
-            border-radius: 50%;
         }
 
         /* User Info */
@@ -474,7 +481,16 @@
                     </div>
                     <div class="form-group">
                         <label for="securityQuestion" class="form-label">سوال امنیتی:</label>
-                        <input type="text" id="securityQuestion" class="form-control" placeholder="مثال: نام اولین معلم شما؟" />
+                        <div class="select-wrapper">
+                            <select id="securityQuestion" class="form-control">
+                                <option value="">لطفاً یک سوال امنیتی انتخاب کنید</option>
+                                <option value="نام اولین معلم شما؟">نام اولین معلم شما؟</option>
+                                <option value="نام اولین حیوان خانگی شما؟">نام اولین حیوان خانگی شما؟</option>
+                                <option value="نام شهر تولد شما؟">نام شهر تولد شما؟</option>
+                                <option value="نام بهترین دوست دوران کودکی شما؟">نام بهترین دوست دوران کودکی شما؟</option>
+                                <option value="نام اولین مدیر شما؟">نام اولین مدیر شما؟</option>
+                            </select>
+                        </div>
                     </div>
                     <div class="form-group">
                         <label for="securityAnswer" class="form-label">پاسخ سوال امنیتی:</label>
@@ -574,7 +590,9 @@
                     </div>
                     <div class="form-group">
                         <label for="addRank" class="form-label">رنک مربوطه:</label>
-                        <select id="addRank" class="form-control"></select>
+                        <div class="select-wrapper">
+                            <select id="addRank" class="form-control"></select>
+                        </div>
                     </div>
                     <div class="form-group">
                         <label for="addSecurityQuestion" class="form-label">سوال امنیتی شما:</label>
@@ -648,6 +666,15 @@
         let adminUser = null;
         let currentTheme = 'light';
         
+        // سوالات امنیتی پیش‌فرض
+        const securityQuestions = [
+            "نام اولین معلم شما؟",
+            "نام اولین حیوان خانگی شما؟",
+            "نام شهر تولد شما؟",
+            "نام بهترین دوست دوران کودکی شما؟",
+            "نام اولین مدیر شما؟"
+        ];
+        
         // مقداردهی اولیه
         document.addEventListener('DOMContentLoaded', function() {
             // بررسی و تنظیم تم
@@ -662,6 +689,9 @@
             
             // افزودن رویداد به دکمه تغییر تم
             document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+            
+            // پر کردن سوالات امنیتی در صفحه تنظیم رمز عبور
+            populateSecurityQuestions();
             
             // بررسی اینکه آیا در محیط تلگرام هستیم
             if (window.Telegram && window.Telegram.WebApp) {
@@ -681,6 +711,24 @@
                 showError('این پنل فقط از طریق تلگرام قابل دسترسی است. لطفاً از طریق ربات تلگرام به این پنل دسترسی پیدا کنید.');
             }
         });
+        
+        // پر کردن سوالات امنیتی
+        function populateSecurityQuestions() {
+            const securityQuestionSelect = document.getElementById('securityQuestion');
+            
+            // حذف گزینه‌های قبلی به جز اولین گزینه
+            while (securityQuestionSelect.options.length > 1) {
+                securityQuestionSelect.remove(1);
+            }
+            
+            // اضافه کردن سوالات امنیتی
+            securityQuestions.forEach(question => {
+                const option = document.createElement('option');
+                option.value = question;
+                option.textContent = question;
+                securityQuestionSelect.appendChild(option);
+            });
+        }
         
         // تغییر تم
         function toggleTheme() {
@@ -875,7 +923,7 @@
             }
         }
         
-        // حذف пользователя
+        // حذف کاربر
         async function removeUser() {
             const userId = document.getElementById('removeUserId').value;
             const securityAnswer = document.getElementById('removeSecurityAnswer').value;
@@ -923,6 +971,14 @@
                     const rankSelect = document.getElementById('addRank');
                     
                     rankSelect.innerHTML = '';
+                    
+                    // افزودن گزینه پیش‌فرض
+                    const defaultOption = document.createElement('option');
+                    defaultOption.value = '';
+                    defaultOption.textContent = 'لطفاً یک رنک انتخاب کنید';
+                    rankSelect.appendChild(defaultOption);
+                    
+                    // افزودن رنک‌ها
                     ranks.forEach(rank => {
                         const option = document.createElement('option');
                         option.value = rank;
