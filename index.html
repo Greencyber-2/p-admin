@@ -89,11 +89,6 @@
             outline: none;
         }
         
-        .form-group input[readonly] {
-            background-color: #f5f5f5;
-            cursor: not-allowed;
-        }
-        
         .btn {
             background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
             color: white;
@@ -168,15 +163,6 @@
             border-radius: 5px;
             margin: 10px 0;
             border: 1px solid #ffeaa7;
-        }
-        
-        .security-question-display {
-            background-color: #f8f9fa;
-            padding: 12px;
-            border-radius: 8px;
-            border: 1px solid #dee2e6;
-            margin-bottom: 15px;
-            font-weight: bold;
         }
         
         @media (max-width: 768px) {
@@ -299,10 +285,8 @@
                     <select id="addRank"></select>
                 </div>
                 <div class="form-group">
-                    <label>سوال امنیتی شما:</label>
-                    <div class="security-question-display" id="addSecurityQuestionDisplay">
-                        سوال امنیتی شما اینجا نمایش داده می‌شود
-                    </div>
+                    <label for="addSecurityQuestion">سوال امنیتی شما:</label>
+                    <input type="text" id="addSecurityQuestion" value="سوال امنیتی که هنگام تنظیم رمز عبور تنظیم کرده اید" readonly />
                 </div>
                 <div class="form-group">
                     <label for="addSecurityAnswer">پاسخ سوال امنیتی:</label>
@@ -320,10 +304,8 @@
                     <input type="number" id="removeUserId" placeholder="مثال: 123456789" />
                 </div>
                 <div class="form-group">
-                    <label>سوال امنیتی شما:</label>
-                    <div class="security-question-display" id="removeSecurityQuestionDisplay">
-                        سوال امنیتی شما اینجا نمایش داده می‌شود
-                    </div>
+                    <label for="removeSecurityQuestion">سوال امنیتی شما:</label>
+                    <input type="text" id="removeSecurityQuestion" value="سوال امنیتی که هنگام تنظیم رمز عبور تنظیم کرده اید" readonly />
                 </div>
                 <div class="form-group">
                     <label for="removeSecurityAnswer">پاسخ سوال امنیتی:</label>
@@ -534,12 +516,6 @@
                 if (response.ok) {
                     showMessage('کاربر با موفقیت اضافه شد.', 'success');
                     hideAddUserForm();
-                    
-                    // پاک کردن فرم
-                    document.getElementById('addUserId').value = '';
-                    document.getElementById('addGameName').value = '';
-                    document.getElementById('addReferral').value = '';
-                    document.getElementById('addSecurityAnswer').value = '';
                 } else {
                     const error = await response.json();
                     showMessage(error.error || 'خطا در افزودن کاربر', 'error');
@@ -557,7 +533,7 @@
             const securityAnswer = document.getElementById('removeSecurityAnswer').value;
             
             if (!userId || !securityAnswer) {
-                showMessage('لطفاً فیلدهای اجباری را پر کنید.', 'error');
+                showMessage('لطفاً فیل드های اجباری را پر کنید.', 'error');
                 return;
             }
             
@@ -578,10 +554,6 @@
                 if (response.ok) {
                     showMessage('کاربر با موفقیت حذف شد.', 'success');
                     hideRemoveUserForm();
-                    
-                    // پاک کردن فرم
-                    document.getElementById('removeUserId').value = '';
-                    document.getElementById('removeSecurityAnswer').value = '';
                 } else {
                     const error = await response.json();
                     showMessage(error.error || 'خطا در حذف کاربر', 'error');
@@ -645,11 +617,9 @@
             document.getElementById('adminRank').textContent = adminUser.rank;
             document.getElementById('adminUserId').textContent = adminUser.user_id;
             
-            // نمایش سوال امنیتی برای فرم‌ها
-            document.getElementById('addSecurityQuestionDisplay').textContent = 
-                currentUser.security_question || 'سوال امنیتی تعریف نشده است';
-            document.getElementById('removeSecurityQuestionDisplay').textContent = 
-                currentUser.security_question || 'سوال امنیتی تعریف نشده است';
+            // بارگذاری سوال امنیتی برای فرم‌ها
+            document.getElementById('addSecurityQuestion').value = currentUser.security_question || '';
+            document.getElementById('removeSecurityQuestion').value = currentUser.security_question || '';
         }
         
         function showAddUserForm() {
