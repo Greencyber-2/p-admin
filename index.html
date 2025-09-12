@@ -286,7 +286,7 @@
                 </div>
                 <div class="form-group">
                     <label for="addSecurityQuestion">سوال امنیتی شما:</label>
-                    <input type="text" id="addSecurityQuestion" placeholder="سوال امنیتی که هنگام تنظیم رمز عبور تنظیم کرده اید" readonly />
+                    <input type="text" id="addSecurityQuestion" value="سوال امنیتی که هنگام تنظیم رمز عبور تنظیم کرده اید" readonly />
                 </div>
                 <div class="form-group">
                     <label for="addSecurityAnswer">پاسخ سوال امنیتی:</label>
@@ -305,7 +305,7 @@
                 </div>
                 <div class="form-group">
                     <label for="removeSecurityQuestion">سوال امنیتی شما:</label>
-                    <input type="text" id="removeSecurityQuestion" placeholder="سوال امنیتی که هنگام تنظیم رمز عبور تنظیم کرده اید" readonly />
+                    <input type="text" id="removeSecurityQuestion" value="سوال امنیتی که هنگام تنظیم رمز عبور تنظیم کرده اید" readonly />
                 </div>
                 <div class="form-group">
                     <label for="removeSecurityAnswer">پاسخ سوال امنیتی:</label>
@@ -533,7 +533,7 @@
             const securityAnswer = document.getElementById('removeSecurityAnswer').value;
             
             if (!userId || !securityAnswer) {
-                showMessage('لطفاً فیلدهای اجباری را پر کنید.', 'error');
+                showMessage('لطفاً فیل드های اجباری را پر کنید.', 'error');
                 return;
             }
             
