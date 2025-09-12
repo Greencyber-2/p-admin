@@ -1056,10 +1056,10 @@
                     hideRemoveUserForm();
                 } else {
                     const error = await response.json();
-                    showToast('error', 'خطا', error.error || 'خطا در حذف пользователя');
+                    showToast('error', 'خطا', error.error || 'خطا در حذف کاربر');
                 }
             } catch (error) {
-                showToast('error', 'خطا', 'خطا در ارتباط с сервером: ' + error.message);
+                showToast('error', 'خطا', 'خطا در ارتباط با سرور: ' + error.message);
             } finally {
                 hideLoading();
             }
