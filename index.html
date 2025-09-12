@@ -6,11 +6,15 @@
     <title>پنل مدیریت ادمین‌ها</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary: #4361ee;
+            --primary-light: #6f86ff;
+            --primary-dark: #3a56d4;
             --secondary: #7209b7;
             --success: #06d6a0;
+            --success-light: #4cd964;
             --danger: #ef476f;
             --warning: #ffd166;
             --info: #118ab2;
@@ -19,15 +23,18 @@
             --background: #ffffff;
             --surface: #f8f9fa;
             --text: #212529;
+            --text-secondary: #6c757d;
             --border: #dee2e6;
             --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
             --transition: all 0.3s ease;
+            --border-radius: 16px;
         }
 
         .dark-mode {
             --background: #121212;
             --surface: #1e1e1e;
             --text: #e6e6e6;
+            --text-secondary: #a0a0a0;
             --border: #2d2d2d;
             --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
         }
@@ -46,13 +53,15 @@
             padding: 20px;
             color: var(--text);
             background-color: var(--background);
+            font-weight: 300;
+            line-height: 1.6;
         }
         
         .container {
             max-width: 900px;
             margin: 0 auto;
             background: var(--surface);
-            border-radius: 20px;
+            border-radius: var(--border-radius);
             box-shadow: var(--card-shadow);
             overflow: hidden;
         }
@@ -106,7 +115,7 @@
             margin-bottom: 30px;
             padding: 25px;
             border: 1px solid var(--border);
-            border-radius: 16px;
+            border-radius: var(--border-radius);
             background: var(--surface);
             box-shadow: var(--card-shadow);
         }
@@ -120,6 +129,7 @@
             display: flex;
             align-items: center;
             gap: 10px;
+            font-weight: 600;
         }
         
         .form-group {
@@ -130,7 +140,7 @@
         .form-group label {
             display: block;
             margin-bottom: 8px;
-            font-weight: 600;
+            font-weight: 500;
             color: var(--text);
             font-size: 15px;
         }
@@ -145,6 +155,7 @@
             font-size: 16px;
             background: var(--background);
             color: var(--text);
+            font-family: 'Vazirmatn', sans-serif;
         }
         
         .form-group input:focus,
@@ -180,6 +191,7 @@
             justify-content: center;
             gap: 8px;
             box-shadow: 0 4px 12px rgba(67, 97, 238, 0.25);
+            transition: all 0.3s ease;
         }
         
         .btn:hover {
@@ -197,7 +209,7 @@
         }
         
         .btn-success {
-            background: linear-gradient(135deg, var(--success) 0%, #4cd964 100%);
+            background: linear-gradient(135deg, var(--success) 0%, var(--success-light) 100%);
             box-shadow: 0 4px 12px rgba(6, 214, 160, 0.25);
         }
 
@@ -221,7 +233,7 @@
             background: linear-gradient(135deg, var(--secondary) 0%, var(--primary) 100%);
             color: white;
             padding: 20px;
-            border-radius: 16px;
+            border-radius: var(--border-radius);
             margin-bottom: 25px;
         }
         
@@ -266,42 +278,90 @@
             to { transform: rotate(360deg); }
         }
         
-        .error {
-            background: rgba(239, 71, 111, 0.1);
-            color: var(--danger);
-            padding: 15px;
-            border-radius: 12px;
-            margin: 15px 0;
-            border: 1px solid rgba(239, 71, 111, 0.2);
-            display: flex;
-            align-items: center;
-            gap: 10px;
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            max-width: 350px;
         }
         
-        .success {
-            background: rgba(6, 214, 160, 0.1);
-            color: var(--success);
-            padding: 15px;
+        .toast {
+            padding: 15px 20px;
+            margin-bottom: 15px;
             border-radius: 12px;
-            margin: 15px 0;
-            border: 1px solid rgba(6, 214, 160, 0.2);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
+            animation: toastIn 0.3s ease forwards;
+            opacity: 0;
+            transform: translateY(-20px);
+            color: white;
         }
         
-        .warning {
-            background: rgba(255, 209, 102, 0.1);
-            color: var(--warning);
-            padding: 15px;
-            border-radius: 12px;
-            margin: 15px 0;
-            border: 1px solid rgba(255, 209, 102, 0.2);
-            display: flex;
-            align-items: center;
-            gap: 10px;
+        .toast.success {
+            background: var(--success);
         }
-
+        
+        .toast.error {
+            background: var(--danger);
+        }
+        
+        .toast.warning {
+            background: var(--warning);
+            color: var(--dark);
+        }
+        
+        .toast.info {
+            background: var(--info);
+        }
+        
+        .toast i {
+            font-size: 20px;
+        }
+        
+        .toast-content {
+            flex: 1;
+        }
+        
+        .toast-title {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .toast-message {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        .toast-close {
+            background: none;
+            border: none;
+            color: inherit;
+            cursor: pointer;
+            font-size: 16px;
+            opacity: 0.7;
+        }
+        
+        .toast-close:hover {
+            opacity: 1;
+        }
+        
+        @keyframes toastIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes toastOut {
+            to {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+        }
+        
         .action-buttons {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -309,36 +369,76 @@
             margin: 25px 0;
         }
 
-        .admin-stats {
+        .admin-info {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            grid-template-columns: 1fr;
             gap: 15px;
             margin-bottom: 25px;
         }
 
-        .stat-card {
+        .info-card {
             background: var(--background);
             padding: 20px;
             border-radius: 12px;
-            text-align: center;
             box-shadow: var(--card-shadow);
+            display: flex;
+            align-items: center;
+            gap: 15px;
         }
 
-        .stat-card i {
+        .info-card i {
             font-size: 28px;
             color: var(--primary);
-            margin-bottom: 10px;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(67, 97, 238, 0.1);
+            border-radius: 50%;
         }
 
-        .stat-card h3 {
-            font-size: 24px;
+        .info-card-content h3 {
+            font-size: 18px;
             margin-bottom: 5px;
             color: var(--primary);
         }
 
-        .stat-card p {
-            color: var(--text);
-            opacity: 0.8;
+        .info-card-content p {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+        
+        .login-form {
+            max-width: 450px;
+            margin: 0 auto;
+        }
+        
+        .login-logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .login-logo i {
+            font-size: 64px;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+        
+        .login-logo h2 {
+            color: var(--primary);
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        .login-logo p {
+            color: var(--text-secondary);
+        }
+        
+        .form-footer {
+            margin-top: 25px;
+            text-align: center;
+            color: var(--text-secondary);
             font-size: 14px;
         }
         
@@ -372,6 +472,12 @@
             .section {
                 padding: 20px;
             }
+            
+            .toast-container {
+                right: 10px;
+                left: 10px;
+                max-width: none;
+            }
         }
 
         /* انیمیشن‌های صفحه */
@@ -391,21 +497,10 @@
             }
         }
 
-        /* استایل برای حالت تبلت */
-        @media (max-width: 992px) {
-            .admin-stats {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
         /* استایل برای حالت موبایل */
         @media (max-width: 576px) {
             body {
                 padding: 10px;
-            }
-
-            .admin-stats {
-                grid-template-columns: 1fr;
             }
 
             .theme-toggle {
@@ -418,6 +513,11 @@
 
             .header {
                 padding: 20px 15px;
+            }
+            
+            .info-card {
+                flex-direction: column;
+                text-align: center;
             }
         }
     </style>
@@ -449,31 +549,57 @@
                     <i class="fas fa-exclamation-circle"></i>
                     <p id="errorMessage"></p>
                 </div>
+                <div style="text-align: center; margin-top: 20px;">
+                    <p>لطفاً از طریق ربات تلگرام به این پنل دسترسی پیدا کنید.</p>
+                    <button class="btn btn-outline" style="margin-top: 15px;" onclick="location.reload()">
+                        <i class="fas fa-refresh"></i> تلاش مجدد
+                    </button>
+                </div>
             </div>
             
             <!-- صفحه لاگین -->
             <div id="loginPage" class="section hidden">
-                <h2><i class="fas fa-lock"></i> ورود به سیستم</h2>
-                <div class="form-group with-icon">
-                    <label for="userId">ایدی عددی کاربر:</label>
-                    <i class="fas fa-user"></i>
-                    <input type="number" id="userId" placeholder="مثال: 123456789" readonly />
+                <div class="login-logo">
+                    <i class="fas fa-lock"></i>
+                    <h2>ورود به پنل مدیریت</h2>
+                    <p>لطفاً اطلاعات حساب خود را وارد کنید</p>
                 </div>
-                <div class="form-group with-icon">
-                    <label for="password">رمز عبور:</label>
-                    <i class="fas fa-key"></i>
-                    <input type="password" id="password" placeholder="رمز عبور خود را وارد کنید" />
+                
+                <div class="login-form">
+                    <div class="form-group with-icon">
+                        <label for="userId">ایدی عددی کاربر:</label>
+                        <i class="fas fa-user"></i>
+                        <input type="number" id="userId" placeholder="مثال: 123456789" readonly />
+                    </div>
+                    <div class="form-group with-icon">
+                        <label for="password">رمز عبور:</label>
+                        <i class="fas fa-key"></i>
+                        <input type="password" id="password" placeholder="رمز عبور خود را وارد کنید" />
+                    </div>
+                    <button class="btn" onclick="login()" style="width: 100%;">
+                        <i class="fas fa-sign-in-alt"></i> ورود به سیستم
+                    </button>
+                    
+                    <div class="form-footer">
+                        <p>اگر رمز عبور خود را فراموش کرده‌اید، با مدیر سیستم تماس بگیرید.</p>
+                    </div>
                 </div>
-                <button class="btn" onclick="login()"><i class="fas fa-sign-in-alt"></i> ورود به سیستم</button>
             </div>
             
             <!-- صفحه تنظیم رمز عبور -->
             <div id="setupPage" class="section hidden">
-                <h2><i class="fas fa-cog"></i> تنظیم رمز عبور</h2>
+                <h2><i class="fas fa-cog"></i> تنظیم رمز عبور جدید</h2>
+                <p>برای ادامه، لطفاً یک رمز عبور جدید برای حساب خود تنظیم کنید.</p>
+                
                 <div class="form-group with-icon">
                     <label for="newPassword">رمز عبور جدید:</label>
                     <i class="fas fa-lock"></i>
                     <input type="password" id="newPassword" placeholder="رمز عبور جدید را وارد کنید" />
+                </div>
+                <div class="form-group with-icon">
+                    <label for="confirmPassword">تکرار رمز عبور:</label>
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="confirmPassword" placeholder="رمز عبور را مجدداً وارد کنید" />
                 </div>
                 <div class="form-group">
                     <label for="setupSecurityQuestion">سوال امنیتی:</label>
@@ -492,7 +618,9 @@
                     <i class="fas fa-shield-alt"></i>
                     <input type="text" id="securityAnswer" placeholder="پاسخ سوال امنیتی را وارد کنید" />
                 </div>
-                <button class="btn btn-success" onclick="setupPassword()"><i class="fas fa-save"></i> ذخیره تنظیمات</button>
+                <button class="btn btn-success" onclick="setupPassword()" style="width: 100%;">
+                    <i class="fas fa-save"></i> ذخیره تنظیمات
+                </button>
             </div>
             
             <!-- صفحه اطلاعات کاربر -->
@@ -517,35 +645,10 @@
                     <p><i class="fas fa-crown"></i><strong>رنک شما:</strong> <span id="adminRank"></span></p>
                     <p><i class="fas fa-id-card"></i><strong>ایدی عددی:</strong> <span id="adminUserId"></span></p>
                 </div>
-
-                <div class="admin-stats">
-                    <div class="stat-card">
-                        <i class="fas fa-users"></i>
-                        <h3>۲۴۵</h3>
-                        <p>کاربران کل</p>
-                    </div>
-                    <div class="stat-card">
-                        <i class="fas fa-user-plus"></i>
-                        <h3>۱۲</h3>
-                        <p>افزوده شده امروز</p>
-                    </div>
-                    <div class="stat-card">
-                        <i class="fas fa-shield-alt"></i>
-                        <h3>۸</h3>
-                        <p>ادمین‌ها</p>
-                    </div>
-                    <div class="stat-card">
-                        <i class="fas fa-chart-line"></i>
-                        <h3>+۱۸٪</h3>
-                        <p>رشد هفتگی</p>
-                    </div>
-                </div>
                 
                 <div class="action-buttons">
                     <button class="btn btn-success" onclick="showAddUserForm()"><i class="fas fa-user-plus"></i> افزودن کاربر جدید</button>
                     <button class="btn btn-danger" onclick="showRemoveUserForm()"><i class="fas fa-user-minus"></i> حذف کاربر</button>
-                    <button class="btn" onclick="showStats()"><i class="fas fa-chart-bar"></i> آمار و گزارشات</button>
-                    <button class="btn btn-outline" onclick="showSettings()"><i class="fas fa-cog"></i> تنظیمات سیستم</button>
                 </div>
             </div>
             
@@ -635,11 +738,60 @@
         </div>
     </div>
 
+    <div class="toast-container" id="toastContainer"></div>
+
     <script>
         const API_BASE = 'https://p-admin.hupadr.workers.dev';
         let tg = null;
         let currentUser = null;
         let adminUser = null;
+        
+        // تابع نمایش اعلان
+        function showToast(type, title, message, duration = 5000) {
+            const toastContainer = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            
+            let icon = 'fa-info-circle';
+            if (type === 'success') icon = 'fa-check-circle';
+            if (type === 'error') icon = 'fa-exclamation-circle';
+            if (type === 'warning') icon = 'fa-exclamation-triangle';
+            
+            toast.innerHTML = `
+                <i class="fas ${icon}"></i>
+                <div class="toast-content">
+                    <div class="toast-title">${title}</div>
+                    <div class="toast-message">${message}</div>
+                </div>
+                <button class="toast-close" onclick="this.parentElement.remove()">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+            
+            toastContainer.appendChild(toast);
+            
+            // نمایش توست با انیمیشن
+            setTimeout(() => {
+                toast.style.opacity = '1';
+                toast.style.transform = 'translateY(0)';
+            }, 10);
+            
+            // حذف خودکار توست پس از مدت زمان مشخص
+            if (duration) {
+                setTimeout(() => {
+                    if (toast.parentElement) {
+                        toast.style.animation = 'toastOut 0.3s ease forwards';
+                        setTimeout(() => {
+                            if (toast.parentElement) {
+                                toastContainer.removeChild(toast);
+                            }
+                        }, 300);
+                    }
+                }, duration);
+            }
+            
+            return toast;
+        }
         
         // مقداردهی اولیه
         document.addEventListener('DOMContentLoaded', function() {
@@ -736,7 +888,7 @@
             const password = document.getElementById('password').value;
             
             if (!password) {
-                showMessage('لطفاً رمز عبور را وارد کنید.', 'error');
+                showToast('error', 'خطا', 'لطفاً رمز عبور را وارد کنید.');
                 return;
             }
             
@@ -764,10 +916,10 @@
                         showUserInfo();
                     }
                 } else {
-                    showMessage(result.error || 'خطا در ورود به سیستم', 'error');
+                    showToast('error', 'خطا', result.error || 'خطا در ورود به سیستم');
                 }
             } catch (error) {
-                showMessage('خطا در ارتباط با سرور: ' + error.message, 'error');
+                showToast('error', 'خطا', 'خطا در ارتباط با سرور: ' + error.message);
             } finally {
                 hideLoading();
             }
@@ -776,11 +928,17 @@
         // تنظیم رمز عبور
         async function setupPassword() {
             const newPassword = document.getElementById('newPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
             const securityQuestion = document.getElementById('setupSecurityQuestion').value;
             const securityAnswer = document.getElementById('securityAnswer').value;
             
-            if (!newPassword || !securityQuestion || !securityAnswer) {
-                showMessage('لطفاً تمام فیلدها را پر کنید.', 'error');
+            if (!newPassword || !confirmPassword || !securityQuestion || !securityAnswer) {
+                showToast('error', 'خطا', 'لطفاً تمام فیلدها را پر کنید.');
+                return;
+            }
+            
+            if (newPassword !== confirmPassword) {
+                showToast('error', 'خطا', 'رمز عبور و تکرار آن مطابقت ندارند.');
                 return;
             }
             
@@ -800,7 +958,7 @@
                 });
                 
                 if (response.ok) {
-                    showMessage('رمز عبور و سوال امنیتی با موفقیت تنظیم شد.', 'success');
+                    showToast('success', 'موفقیت', 'رمز عبور و سوال امنیتی با موفقیت تنظیم شد.');
                     
                     // بعد از تنظیم رمز، وضعیت کاربر را بررسی کن
                     setTimeout(() => {
@@ -812,10 +970,10 @@
                     }, 2000);
                 } else {
                     const error = await response.json();
-                    showMessage(error.error || 'خطا در تنظیم رمز عبور', 'error');
+                    showToast('error', 'خطا', error.error || 'خطا در تنظیم رمز عبور');
                 }
             } catch (error) {
-                showMessage('خطا در ارتباط با سرور: ' + error.message, 'error');
+                showToast('error', 'خطا', 'خطا در ارتباط با سرور: ' + error.message);
             } finally {
                 hideLoading();
             }
@@ -831,7 +989,7 @@
             const securityAnswer = document.getElementById('addSecurityAnswer').value;
             
             if (!userId || !rank || !securityQuestion || !securityAnswer) {
-                showMessage('لطفاً فیلدهای اجباری را پر کنید.', 'error');
+                showToast('error', 'خطا', 'لطفاً فیلدهای اجباری را پر کنید.');
                 return;
             }
             
@@ -854,14 +1012,14 @@
                 });
                 
                 if (response.ok) {
-                    showMessage('کاربر با موفقیت اضافه شد.', 'success');
+                    showToast('success', 'موفقیت', 'کاربر با موفقیت اضافه شد.');
                     hideAddUserForm();
                 } else {
                     const error = await response.json();
-                    showMessage(error.error || 'خطا در افزودن کاربر', 'error');
+                    showToast('error', 'خطا', error.error || 'خطا در افزودن کاربر');
                 }
             } catch (error) {
-                showMessage('خطا در ارتباط با سرور: ' + error.message, 'error');
+                showToast('error', 'خطا', 'خطا در ارتباط با سرور: ' + error.message);
             } finally {
                 hideLoading();
             }
@@ -874,7 +1032,7 @@
             const securityAnswer = document.getElementById('removeSecurityAnswer').value;
             
             if (!userId || !securityQuestion || !securityAnswer) {
-                showMessage('لطفاً فیلدهای اجباری را پر کنید.', 'error');
+                showToast('error', 'خطا', 'لطفاً فیلدهای اجباری را پر کنید.');
                 return;
             }
             
@@ -894,14 +1052,14 @@
                 });
                 
                 if (response.ok) {
-                    showMessage('کاربر با موفقیت حذف شد.', 'success');
+                    showToast('success', 'موفقیت', 'کاربر با موفقیت حذف شد.');
                     hideRemoveUserForm();
                 } else {
                     const error = await response.json();
-                    showMessage(error.error || 'خطا در حذف کاربر', 'error');
+                    showToast('error', 'خطا', error.error || 'خطا در حذف пользователя');
                 }
             } catch (error) {
-                showMessage('خطا در ارتباط با سرور: ' + error.message, 'error');
+                showToast('error', 'خطا', 'خطا در ارتباط с сервером: ' + error.message);
             } finally {
                 hideLoading();
             }
@@ -1013,15 +1171,6 @@
             setTimeout(() => {
                 messageDiv.classList.add('hidden');
             }, 5000);
-        }
-
-        // توابع جدید برای دکمه‌های اضافی
-        function showStats() {
-            showMessage('این بخش به زودی اضافه خواهد شد.', 'warning');
-        }
-
-        function showSettings() {
-            showMessage('این بخش به زودی اضافه خواهد شد.', 'warning');
         }
     </script>
 </body>
