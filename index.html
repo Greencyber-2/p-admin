@@ -89,6 +89,11 @@
             outline: none;
         }
         
+        .form-group input[readonly] {
+            background-color: #f5f5f5;
+            cursor: not-allowed;
+        }
+        
         .btn {
             background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
             color: white;
@@ -491,8 +496,8 @@
             const rank = document.getElementById('addRank').value;
             const securityAnswer = document.getElementById('addSecurityAnswer').value;
             
-            if (!userId || !rank || !securityAnswer) {
-                showMessage('لطفاً فیلدهای اجباری را پر کنید.', 'error');
+            if (!userId || !gameName || !referral || !rank || !securityAnswer) {
+                showMessage('لطفاً تمام فیلدها را پر کنید.', 'error');
                 return;
             }
             
@@ -505,16 +510,16 @@
                     },
                     body: JSON.stringify({
                         admin_id: adminUser.user_id,
-                        security_answer: securityAnswer,
                         user_id: parseInt(userId),
                         game_name: gameName,
                         referral: referral,
-                        rank: rank
+                        rank: rank,
+                        security_answer: securityAnswer
                     })
                 });
                 
                 if (response.ok) {
-                    showMessage('کاربر با موفقیت اضافه شد.', 'success');
+                    showMessage('کاربر با موفقیت افزوده شد.', 'success');
                     hideAddUserForm();
                 } else {
                     const error = await response.json();
@@ -533,7 +538,7 @@
             const securityAnswer = document.getElementById('removeSecurityAnswer').value;
             
             if (!userId || !securityAnswer) {
-                showMessage('لطفاً فیل드های اجباری را پر کنید.', 'error');
+                showMessage('لطفاً تمام فیلدها را پر کنید.', 'error');
                 return;
             }
             
@@ -546,8 +551,8 @@
                     },
                     body: JSON.stringify({
                         admin_id: adminUser.user_id,
-                        security_answer: securityAnswer,
-                        user_id: parseInt(userId)
+                        user_id: parseInt(userId),
+                        security_answer: securityAnswer
                     })
                 });
                 
@@ -565,97 +570,89 @@
             }
         }
         
-        // دریافت لیست رنک‌های قابل اختصاص
-        async function loadAssignableRanks() {
-            try {
-                const response = await fetch(`${API_BASE}/api/assignable-ranks?admin_id=${adminUser.user_id}`);
-                
-                if (response.ok) {
-                    const ranks = await response.json();
-                    const rankSelect = document.getElementById('addRank');
-                    
-                    rankSelect.innerHTML = '';
-                    ranks.forEach(rank => {
-                        const option = document.createElement('option');
-                        option.value = rank;
-                        option.textContent = rank;
-                        rankSelect.appendChild(option);
-                    });
-                }
-            } catch (error) {
-                console.error('Error loading ranks:', error);
-            }
-        }
-        
-        // توابع نمایش/پنهان کردن صفحات
+        // توابع نمایش صفحات
         function showLoginPage() {
-            hideAllPages();
-            document.getElementById('loginPage').classList.remove('hidden');
+            document.getElementById('checkingPage').classList.add('hidden');
+            document.getElementById('errorPage').classList.add('hidden');
+            document.getElementById('setupPage').classList.add('hidden');
+            document.getElementById('userInfoPage').classList.add('hidden');
+            document.getElementById('adminPanelPage').classList.add('hidden');
+            
             document.getElementById('userId').value = currentUser.user_id;
+            document.getElementById('loginPage').classList.remove('hidden');
         }
         
         function showSetupPage() {
-            hideAllPages();
+            document.getElementById('checkingPage').classList.add('hidden');
+            document.getElementById('errorPage').classList.add('hidden');
+            document.getElementById('loginPage').classList.add('hidden');
+            document.getElementById('userInfoPage').classList.add('hidden');
+            document.getElementById('adminPanelPage').classList.add('hidden');
+            
             document.getElementById('setupPage').classList.remove('hidden');
         }
         
         function showUserInfo() {
-            hideAllPages();
-            document.getElementById('userInfoPage').classList.remove('hidden');
+            document.getElementById('checkingPage').classList.add('hidden');
+            document.getElementById('errorPage').classList.add('hidden');
+            document.getElementById('loginPage').classList.add('hidden');
+            document.getElementById('setupPage').classList.add('hidden');
+            document.getElementById('adminPanelPage').classList.add('hidden');
             
             document.getElementById('userRank').textContent = currentUser.rank;
-            document.getElementById('userGameName').textContent = currentUser.game_name || 'تعریف نشده';
+            document.getElementById('userGameName').textContent = currentUser.game_name;
             document.getElementById('userUserId').textContent = currentUser.user_id;
-            document.getElementById('userReferral').textContent = currentUser.referral || 'تعریف نشده';
+            document.getElementById('userReferral').textContent = currentUser.referral;
+            
+            document.getElementById('userInfoPage').classList.remove('hidden');
         }
         
         function showAdminPanel() {
-            hideAllPages();
-            document.getElementById('adminPanelPage').classList.remove('hidden');
-            
-            document.getElementById('adminName').textContent = adminUser.game_name || adminUser.user_id;
-            document.getElementById('adminRank').textContent = adminUser.rank;
-            document.getElementById('adminUserId').textContent = adminUser.user_id;
-            
-            // بارگذاری سوال امنیتی برای فرم‌ها
-            document.getElementById('addSecurityQuestion').value = currentUser.security_question || '';
-            document.getElementById('removeSecurityQuestion').value = currentUser.security_question || '';
-        }
-        
-        function showAddUserForm() {
-            hideAllPages();
-            document.getElementById('addUserForm').classList.remove('hidden');
-            loadAssignableRanks();
-        }
-        
-        function hideAddUserForm() {
-            showAdminPanel();
-        }
-        
-        function showRemoveUserForm() {
-            hideAllPages();
-            document.getElementById('removeUserForm').classList.remove('hidden');
-        }
-        
-        function hideRemoveUserForm() {
-            showAdminPanel();
-        }
-        
-        function showError(message) {
-            hideAllPages();
-            document.getElementById('errorPage').classList.remove('hidden');
-            document.getElementById('errorMessage').textContent = message;
-        }
-        
-        function hideAllPages() {
             document.getElementById('checkingPage').classList.add('hidden');
             document.getElementById('errorPage').classList.add('hidden');
             document.getElementById('loginPage').classList.add('hidden');
             document.getElementById('setupPage').classList.add('hidden');
             document.getElementById('userInfoPage').classList.add('hidden');
+            
+            document.getElementById('adminName').textContent = adminUser.game_name;
+            document.getElementById('adminRank').textContent = adminUser.rank;
+            document.getElementById('adminUserId').textContent = adminUser.user_id;
+            
+            // بارگذاری رنک‌ها برای دراپ‌داون
+            loadRanks();
+            
+            document.getElementById('adminPanelPage').classList.remove('hidden');
+        }
+        
+        function showAddUserForm() {
             document.getElementById('adminPanelPage').classList.add('hidden');
+            document.getElementById('addUserForm').classList.remove('hidden');
+        }
+        
+        function hideAddUserForm() {
             document.getElementById('addUserForm').classList.add('hidden');
+            document.getElementById('adminPanelPage').classList.remove('hidden');
+        }
+        
+        function showRemoveUserForm() {
+            document.getElementById('adminPanelPage').classList.add('hidden');
+            document.getElementById('removeUserForm').classList.remove('hidden');
+        }
+        
+        function hideRemoveUserForm() {
             document.getElementById('removeUserForm').classList.add('hidden');
+            document.getElementById('adminPanelPage').classList.remove('hidden');
+        }
+        
+        function showError(message) {
+            document.getElementById('checkingPage').classList.add('hidden');
+            document.getElementById('loginPage').classList.add('hidden');
+            document.getElementById('setupPage').classList.add('hidden');
+            document.getElementById('userInfoPage').classList.add('hidden');
+            document.getElementById('adminPanelPage').classList.add('hidden');
+            
+            document.getElementById('errorMessage').textContent = message;
+            document.getElementById('errorPage').classList.remove('hidden');
         }
         
         function showLoading() {
@@ -675,6 +672,29 @@
             setTimeout(() => {
                 messageDiv.classList.add('hidden');
             }, 5000);
+        }
+        
+        function loadRanks() {
+            const ranks = [
+                'Developer',
+                'CC Manager',
+                'CC Director',
+                'CC Warden',
+                'CC Guard',
+                'CC Member',
+                'CC Trainee',
+                'CC Guest'
+            ];
+            
+            const rankSelect = document.getElementById('addRank');
+            rankSelect.innerHTML = '';
+            
+            ranks.forEach(rank => {
+                const option = document.createElement('option');
+                option.value = rank;
+                option.textContent = rank;
+                rankSelect.appendChild(option);
+            });
         }
     </script>
 </body>
