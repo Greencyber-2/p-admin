@@ -7,6 +7,7 @@
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary: #4361ee;
@@ -27,7 +28,7 @@
             --border: #dee2e6;
             --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
             --transition: all 0.3s ease;
-            --border-radius: 16px;
+            --border-radius: 12px;
         }
 
         .dark-mode {
@@ -43,7 +44,7 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Vazirmatn', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Vazirmatn', 'Rubik', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             transition: var(--transition);
         }
         
@@ -75,13 +76,13 @@
         }
         
         .header h1 {
-            font-size: 28px;
+            font-size: 24px;
             margin-bottom: 10px;
             font-weight: 700;
         }
 
         .header p {
-            font-size: 16px;
+            font-size: 14px;
             opacity: 0.9;
         }
 
@@ -91,15 +92,15 @@
             left: 20px;
             background: rgba(255, 255, 255, 0.2);
             border: none;
-            width: 50px;
-            height: 50px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
-            font-size: 20px;
+            font-size: 16px;
         }
 
         .theme-toggle:hover {
@@ -112,12 +113,13 @@
         }
         
         .section {
-            margin-bottom: 30px;
-            padding: 25px;
+            margin-bottom: 25px;
+            padding: 20px;
             border: 1px solid var(--border);
             border-radius: var(--border-radius);
             background: var(--surface);
             box-shadow: var(--card-shadow);
+            animation: fadeIn 0.5s ease forwards;
         }
         
         .section h2 {
@@ -125,7 +127,7 @@
             margin-bottom: 20px;
             padding-bottom: 15px;
             border-bottom: 2px solid var(--primary);
-            font-size: 22px;
+            font-size: 20px;
             display: flex;
             align-items: center;
             gap: 10px;
@@ -142,17 +144,17 @@
             margin-bottom: 8px;
             font-weight: 500;
             color: var(--text);
-            font-size: 15px;
+            font-size: 14px;
         }
         
         .form-group input,
         .form-group select,
         .form-group textarea {
             width: 100%;
-            padding: 14px 16px;
+            padding: 12px 15px;
             border: 2px solid var(--border);
-            border-radius: 12px;
-            font-size: 16px;
+            border-radius: 10px;
+            font-size: 15px;
             background: var(--background);
             color: var(--text);
             font-family: 'Vazirmatn', sans-serif;
@@ -169,7 +171,7 @@
         .form-group i {
             position: absolute;
             left: 15px;
-            top: 43px;
+            top: 40px;
             color: var(--primary);
         }
 
@@ -181,10 +183,10 @@
             background: linear-gradient(135deg, var(--primary) 0%, var(--info) 100%);
             color: white;
             border: none;
-            padding: 14px 28px;
-            border-radius: 12px;
+            padding: 12px 24px;
+            border-radius: 10px;
             cursor: pointer;
-            font-size: 16px;
+            font-size: 15px;
             font-weight: 600;
             display: inline-flex;
             align-items: center;
@@ -234,7 +236,7 @@
             color: white;
             padding: 20px;
             border-radius: var(--border-radius);
-            margin-bottom: 25px;
+            margin-bottom: 20px;
         }
         
         .user-info h2 {
@@ -242,6 +244,7 @@
             border-bottom: 2px solid rgba(255, 255, 255, 0.3);
             padding-bottom: 12px;
             margin-bottom: 15px;
+            font-size: 18px;
         }
 
         .user-info p {
@@ -249,6 +252,7 @@
             display: flex;
             align-items: center;
             gap: 10px;
+            font-size: 14px;
         }
 
         .user-info i {
@@ -265,8 +269,8 @@
         }
 
         .loading .spinner {
-            width: 50px;
-            height: 50px;
+            width: 40px;
+            height: 40px;
             border: 4px solid rgba(67, 97, 238, 0.2);
             border-radius: 50%;
             border-top-color: var(--primary);
@@ -289,7 +293,7 @@
         .toast {
             padding: 15px 20px;
             margin-bottom: 15px;
-            border-radius: 12px;
+            border-radius: 10px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
             display: flex;
             align-items: center;
@@ -318,7 +322,7 @@
         }
         
         .toast i {
-            font-size: 20px;
+            font-size: 18px;
         }
         
         .toast-content {
@@ -328,10 +332,11 @@
         .toast-title {
             font-weight: 600;
             margin-bottom: 4px;
+            font-size: 15px;
         }
         
         .toast-message {
-            font-size: 14px;
+            font-size: 13px;
             opacity: 0.9;
         }
         
@@ -340,7 +345,7 @@
             border: none;
             color: inherit;
             cursor: pointer;
-            font-size: 16px;
+            font-size: 14px;
             opacity: 0.7;
         }
         
@@ -366,31 +371,31 @@
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 15px;
-            margin: 25px 0;
+            margin: 20px 0;
         }
 
         .admin-info {
             display: grid;
             grid-template-columns: 1fr;
             gap: 15px;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
         }
 
         .info-card {
             background: var(--background);
-            padding: 20px;
-            border-radius: 12px;
+            padding: 15px;
+            border-radius: 10px;
             box-shadow: var(--card-shadow);
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 12px;
         }
 
         .info-card i {
-            font-size: 28px;
+            font-size: 24px;
             color: var(--primary);
-            width: 50px;
-            height: 50px;
+            width: 40px;
+            height: 40px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -399,61 +404,94 @@
         }
 
         .info-card-content h3 {
-            font-size: 18px;
+            font-size: 16px;
             margin-bottom: 5px;
             color: var(--primary);
         }
 
         .info-card-content p {
             color: var(--text-secondary);
-            font-size: 14px;
+            font-size: 13px;
         }
         
         .login-form {
-            max-width: 450px;
+            max-width: 400px;
             margin: 0 auto;
         }
         
         .login-logo {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
         }
         
         .login-logo i {
-            font-size: 64px;
+            font-size: 50px;
             color: var(--primary);
             margin-bottom: 15px;
         }
         
         .login-logo h2 {
             color: var(--primary);
-            font-size: 28px;
+            font-size: 24px;
             margin-bottom: 10px;
         }
         
         .login-logo p {
             color: var(--text-secondary);
-        }
-        
-        .form-footer {
-            margin-top: 25px;
-            text-align: center;
-            color: var(--text-secondary);
             font-size: 14px;
         }
         
+        .form-footer {
+            margin-top: 20px;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 13px;
+        }
+        
+        .error {
+            text-align: center;
+            padding: 20px;
+            color: var(--danger);
+            background: rgba(239, 71, 111, 0.1);
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .error i {
+            font-size: 40px;
+            margin-bottom: 15px;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         @media (max-width: 768px) {
             .container {
                 margin: 10px;
-                border-radius: 16px;
+                border-radius: 12px;
+            }
+            
+            .header {
+                padding: 20px;
             }
             
             .header h1 {
-                font-size: 22px;
+                font-size: 20px;
             }
 
             .header p {
-                font-size: 14px;
+                font-size: 13px;
+            }
+            
+            .content {
+                padding: 15px;
+            }
+
+            .section {
+                padding: 15px;
+                margin-bottom: 15px;
             }
             
             .btn {
@@ -464,40 +502,26 @@
             .action-buttons {
                 grid-template-columns: 1fr;
             }
-
-            .content {
-                padding: 15px;
-            }
-
-            .section {
-                padding: 20px;
-            }
             
             .toast-container {
                 right: 10px;
                 left: 10px;
                 max-width: none;
             }
-        }
-
-        /* انیمیشن‌های صفحه */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .section {
-            animation: fadeIn 0.5s ease forwards;
-        }
-
-        /* استایل برای حالت دسکتاپ بزرگ */
-        @media (min-width: 1200px) {
-            .container {
-                max-width: 1000px;
+            
+            .user-info {
+                padding: 15px;
+            }
+            
+            .user-info h2 {
+                font-size: 16px;
+            }
+            
+            .user-info p {
+                font-size: 13px;
             }
         }
 
-        /* استایل برای حالت موبایل */
         @media (max-width: 576px) {
             body {
                 padding: 10px;
@@ -506,18 +530,22 @@
             .theme-toggle {
                 top: 15px;
                 left: 15px;
-                width: 40px;
-                height: 40px;
-                font-size: 16px;
-            }
-
-            .header {
-                padding: 20px 15px;
+                width: 35px;
+                height: 35px;
+                font-size: 14px;
             }
             
             .info-card {
                 flex-direction: column;
                 text-align: center;
+            }
+            
+            .login-logo i {
+                font-size: 40px;
+            }
+            
+            .login-logo h2 {
+                font-size: 20px;
             }
         }
     </style>
@@ -569,609 +597,477 @@
                     <div class="form-group with-icon">
                         <label for="userId">ایدی عددی کاربر:</label>
                         <i class="fas fa-user"></i>
-                        <input type="number" id="userId" placeholder="مثال: 123456789" readonly />
+                        <input type="number" id="userId" placeholder="مثال: 123456789">
                     </div>
-                    <div class="form-group with-icon">
-                        <label for="password">رمز عبور:</label>
-                        <i class="fas fa-key"></i>
-                        <input type="password" id="password" placeholder="رمز عبور خود را وارد کنید" />
-                    </div>
-                    <button class="btn" onclick="login()" style="width: 100%;">
-                        <i class="fas fa-sign-in-alt"></i> ورود به سیستم
-                    </button>
                     
-                    <div class="form-footer">
-                        <p>اگر رمز عبور خود را فراموش کرده‌اید، با مدیر سیستم تماس بگیرید.</p>
+                    <div class="form-group">
+                        <button class="btn" id="loginBtn">
+                            <i class="fas fa-sign-in-alt"></i> ورود به پنل
+                        </button>
                     </div>
                 </div>
-            </div>
-            
-            <!-- صفحه تنظیم رمز عبور -->
-            <div id="setupPage" class="section hidden">
-                <h2><i class="fas fa-cog"></i> تنظیم رمز عبور جدید</h2>
-                <p>برای ادامه، لطفاً یک رمز عبور جدید برای حساب خود تنظیم کنید.</p>
                 
-                <div class="form-group with-icon">
-                    <label for="newPassword">رمز عبور جدید:</label>
-                    <i class="fas fa-lock"></i>
-                    <input type="password" id="newPassword" placeholder="رمز عبور جدید را وارد کنید" />
+                <div class="form-footer">
+                    <p>فقط ادمین‌های سیستم مجاز به دسترسی هستند</p>
                 </div>
-                <div class="form-group with-icon">
-                    <label for="confirmPassword">تکرار رمز عبور:</label>
-                    <i class="fas fa-lock"></i>
-                    <input type="password" id="confirmPassword" placeholder="رمز عبور را مجدداً وارد کنید" />
-                </div>
-                <div class="form-group">
-                    <label for="setupSecurityQuestion">سوال امنیتی:</label>
-                    <select id="setupSecurityQuestion">
-                        <option value="">-- انتخاب سوال امنیتی --</option>
-                        <option value="نام اولین معلم شما؟">نام اولین معلم شما؟</option>
-                        <option value="نام اولین حیوان خانگی شما؟">نام اولین حیوان خانگی شما؟</option>
-                        <option value="شهر تولد شما؟">شهر تولد شما؟</option>
-                        <option value="نام بهترین دوست دوران کودکی شما؟">نام بهترین دوست دوران کودکی شما؟</option>
-                        <option value="مدل اولین ماشین شما؟">مدل اولین ماشین شما؟</option>
-                        <option value="نام مدرسه ابتدایی شما؟">نام مدرسه ابتدایی شما؟</option>
-                    </select>
-                </div>
-                <div class="form-group with-icon">
-                    <label for="securityAnswer">پاسخ سوال امنیتی:</label>
-                    <i class="fas fa-shield-alt"></i>
-                    <input type="text" id="securityAnswer" placeholder="پاسخ سوال امنیتی را وارد کنید" />
-                </div>
-                <button class="btn btn-success" onclick="setupPassword()" style="width: 100%;">
-                    <i class="fas fa-save"></i> ذخیره تنظیمات
-                </button>
             </div>
             
-            <!-- صفحه اطلاعات کاربر -->
-            <div id="userInfoPage" class="section hidden">
+            <!-- صفحه اصلی -->
+            <div id="mainPage" class="section hidden">
+                <h2><i class="fas fa-home"></i> داشبورد مدیریت</h2>
+                
                 <div class="user-info">
-                    <h2><i class="fas fa-check-circle"></i> هویت شما تایید شد</h2>
-                    <p><i class="fas fa-crown"></i><strong>رنک شما:</strong> <span id="userRank"></span></p>
-                    <p><i class="fas fa-gamepad"></i><strong>نیم گیم شما:</strong> <span id="userGameName"></span></p>
-                    <p><i class="fas fa-id-card"></i><strong>ایدی عددی شما:</strong> <span id="userUserId"></span></p>
-                    <p><i class="fas fa-users"></i><strong>رفرال شما:</strong> <span id="userReferral"></span></p>
+                    <h2>اطلاعات ادمین</h2>
+                    <p><i class="fas fa-user"></i> <span id="adminName"></span></p>
+                    <p><i class="fas fa-id-card"></i> <span id="adminId"></span></p>
+                    <p><i class="fas fa-user-tag"></i> <span id="adminRank"></span></p>
                 </div>
-                <p style="text-align: center; margin-top: 20px;">
-                    بزودی پنل‌های مربوطه برای شما هم در دسترس قرار می‌گیرد.
-                </p>
-            </div>
-            
-            <!-- صفحه پنل مدیریت -->
-            <div id="adminPanelPage" class="section hidden">
-                <h2><i class="fas fa-user-shield"></i> پنل مدیریت</h2>
-                <div class="user-info">
-                    <p><i class="fas fa-user"></i><strong>خوش آمدید:</strong> <span id="adminName"></span></p>
-                    <p><i class="fas fa-crown"></i><strong>رنک شما:</strong> <span id="adminRank"></span></p>
-                    <p><i class="fas fa-id-card"></i><strong>ایدی عددی:</strong> <span id="adminUserId"></span></p>
+                
+                <div class="admin-info">
+                    <div class="info-card">
+                        <i class="fas fa-users"></i>
+                        <div class="info-card-content">
+                            <h3 id="totalUsers">0</h3>
+                            <p>کاربران کل</p>
+                        </div>
+                    </div>
                 </div>
                 
                 <div class="action-buttons">
-                    <button class="btn btn-success" onclick="showAddUserForm()"><i class="fas fa-user-plus"></i> افزودن کاربر جدید</button>
-                    <button class="btn btn-danger" onclick="showRemoveUserForm()"><i class="fas fa-user-minus"></i> حذف کاربر</button>
+                    <button class="btn btn-success" id="addUserBtn">
+                        <i class="fas fa-user-plus"></i> افزودن کاربر جدید
+                    </button>
+                    <button class="btn btn-danger" id="removeUserBtn">
+                        <i class="fas fa-user-times"></i> حذف کاربر
+                    </button>
                 </div>
             </div>
             
-            <!-- فرم افزودن کاربر -->
-            <div id="addUserForm" class="section hidden">
+            <!-- صفحه افزودن کاربر -->
+            <div id="addUserPage" class="section hidden">
                 <h2><i class="fas fa-user-plus"></i> افزودن کاربر جدید</h2>
+                
                 <div class="form-group with-icon">
-                    <label for="addUserId">ایدی عددی کاربر:</label>
-                    <i class="fas fa-id-card"></i>
-                    <input type="number" id="addUserId" placeholder="مثال: 123456789" />
+                    <label for="newUserId">ایدی عددی کاربر:</label>
+                    <i class="fas fa-user"></i>
+                    <input type="number" id="newUserId" placeholder="مثال: 123456789">
                 </div>
+                
                 <div class="form-group with-icon">
-                    <label for="addGameName">نیم گیم:</label>
-                    <i class="fas fa-gamepad"></i>
-                    <input type="text" id="addGameName" placeholder="نام در بازی" />
+                    <label for="newUserName">نام کاربر:</label>
+                    <i class="fas fa-signature"></i>
+                    <input type="text" id="newUserName" placeholder="مثال: علی محمدی">
                 </div>
-                <div class="form-group with-icon">
-                    <label for="addReferral">رفرال:</label>
-                    <i class="fas fa-users"></i>
-                    <input type="text" id="addReferral" placeholder="کد رفرال" />
-                </div>
+                
                 <div class="form-group">
-                    <label for="addRank">رنک مربوطه:</label>
-                    <select id="addRank"></select>
-                </div>
-                <div class="form-group">
-                    <label for="addSecurityQuestion">سوال امنیتی:</label>
-                    <select id="addSecurityQuestion">
-                        <option value="">-- انتخاب سوال امنیتی --</option>
-                        <option value="نام اولین معلم شما؟">نام اولین معلم شما؟</option>
-                        <option value="نام اولین حیوان خانگی شما؟">نام اولین حیوان خانگی شما؟</option>
-                        <option value="شهر تولد شما؟">شهر تولد شما؟</option>
-                        <option value="نام بهترین دوست دوران کودکی شما؟">نام بهترین دوست دوران کودکی شما؟</option>
-                        <option value="مدل اولین ماشین شما؟">مدل اولین ماشین شما؟</option>
-                        <option value="نام مدرسه ابتدایی شما؟">نام مدرسه ابتدایی شما؟</option>
-                    </select>
-                </div>
-                <div class="form-group with-icon">
-                    <label for="addSecurityAnswer">پاسخ سوال امنیتی:</label>
-                    <i class="fas fa-shield-alt"></i>
-                    <input type="text" id="addSecurityAnswer" placeholder="پاسخ سوال امنیتی خود را وارد کنید" />
-                </div>
-                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                    <button class="btn btn-success" onclick="addUser()"><i class="fas fa-check"></i> افزودن کاربر</button>
-                    <button class="btn btn-outline" onclick="hideAddUserForm()"><i class="fas fa-arrow-right"></i> بازگشت</button>
+                    <button class="btn btn-success" id="submitAddUserBtn">
+                        <i class="fas fa-check"></i> تأیید و افزودن کاربر
+                    </button>
+                    <button class="btn btn-outline" id="cancelAddUserBtn" style="margin-right: 10px;">
+                        <i class="fas fa-times"></i> انصراف
+                    </button>
                 </div>
             </div>
             
-            <!-- فرم حذف کاربر -->
-            <div id="removeUserForm" class="section hidden">
-                <h2><i class="fas fa-user-minus"></i> حذف کاربر</h2>
+            <!-- صفحه حذف کاربر -->
+            <div id="removeUserPage" class="section hidden">
+                <h2><i class="fas fa-user-times"></i> حذف کاربر</h2>
+                
                 <div class="form-group with-icon">
                     <label for="removeUserId">ایدی عددی کاربر:</label>
-                    <i class="fas fa-id-card"></i>
-                    <input type="number" id="removeUserId" placeholder="مثال: 123456789" />
+                    <i class="fas fa-user"></i>
+                    <input type="number" id="removeUserId" placeholder="مثال: 123456789">
                 </div>
+                
                 <div class="form-group">
-                    <label for="removeSecurityQuestion">سوال امنیتی:</label>
-                    <select id="removeSecurityQuestion">
-                        <option value="">-- انتخاب سوال امنیتی --</option>
-                        <option value="نام اولین معلم شما؟">نام اولین معلم شما؟</option>
-                        <option value="نام اولین حیوان خانگی شما؟">نام اولین حیوان خانگی شما؟</option>
-                        <option value="شهر تولد شما؟">شهر تولد شما؟</option>
-                        <option value="نام بهترین دوست دوران کودکی شما؟">نام بهترین دوست دوران کودکی شما؟</option>
-                        <option value="مدل اولین ماشین شما؟">مدل اولین ماشین شما؟</option>
-                        <option value="نام مدرسه ابتدایی شما؟">نام مدرسه ابتدایی شما؟</option>
-                    </select>
-                </div>
-                <div class="form-group with-icon">
-                    <label for="removeSecurityAnswer">پاسخ سوال امنیتی:</label>
-                    <i class="fas fa-shield-alt"></i>
-                    <input type="text" id="removeSecurityAnswer" placeholder="پاسخ سوال امنیتی خود را وارد کنید" />
-                </div>
-                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                    <button class="btn btn-danger" onclick="removeUser()"><i class="fas fa-trash"></i> حذف کاربر</button>
-                    <button class="btn btn-outline" onclick="hideRemoveUserForm()"><i class="fas fa-arrow-right"></i> بازگشت</button>
+                    <button class="btn btn-danger" id="submitRemoveUserBtn">
+                        <i class="fas fa-trash"></i> تأیید و حذف کاربر
+                    </button>
+                    <button class="btn btn-outline" id="cancelRemoveUserBtn" style="margin-right: 10px;">
+                        <i class="fas fa-times"></i> انصراف
+                    </button>
                 </div>
             </div>
-            
-            <!-- وضعیت بارگذاری و پیام‌ها -->
-            <div id="loading" class="loading hidden">
-                <div class="spinner"></div>
-                <p>در حال بارگذاری...</p>
-            </div>
-            
-            <div id="message" class="hidden"></div>
         </div>
     </div>
-
+    
     <div class="toast-container" id="toastContainer"></div>
 
     <script>
-        const API_BASE = 'https://p-admin.hupadr.workers.dev';
+        // متغیرهای سراسری
         let tg = null;
-        let currentUser = null;
-        let adminUser = null;
+        let isAdmin = false;
+        let isLoggedIn = false;
+        let adminData = null;
+        
+        // المنت‌های DOM
+        const checkingPage = document.getElementById('checkingPage');
+        const errorPage = document.getElementById('errorPage');
+        const loginPage = document.getElementById('loginPage');
+        const mainPage = document.getElementById('mainPage');
+        const addUserPage = document.getElementById('addUserPage');
+        const removeUserPage = document.getElementById('removeUserPage');
+        const errorMessage = document.getElementById('errorMessage');
+        const adminName = document.getElementById('adminName');
+        const adminId = document.getElementById('adminId');
+        const adminRank = document.getElementById('adminRank');
+        const totalUsers = document.getElementById('totalUsers');
+        const themeToggle = document.getElementById('themeToggle');
         
         // تابع نمایش اعلان
-        function showToast(type, title, message, duration = 5000) {
+        function showToast(title, message, type = 'info') {
             const toastContainer = document.getElementById('toastContainer');
             const toast = document.createElement('div');
             toast.className = `toast ${type}`;
             
-            let icon = 'fa-info-circle';
-            if (type === 'success') icon = 'fa-check-circle';
-            if (type === 'error') icon = 'fa-exclamation-circle';
-            if (type === 'warning') icon = 'fa-exclamation-triangle';
+            let icon = 'fas fa-info-circle';
+            if (type === 'success') icon = 'fas fa-check-circle';
+            if (type === 'error') icon = 'fas fa-exclamation-circle';
+            if (type === 'warning') icon = 'fas fa-exclamation-triangle';
             
             toast.innerHTML = `
-                <i class="fas ${icon}"></i>
+                <i class="${icon}"></i>
                 <div class="toast-content">
                     <div class="toast-title">${title}</div>
                     <div class="toast-message">${message}</div>
                 </div>
-                <button class="toast-close" onclick="this.parentElement.remove()">
-                    <i class="fas fa-times"></i>
-                </button>
+                <button class="toast-close"><i class="fas fa-times"></i></button>
             `;
             
             toastContainer.appendChild(toast);
             
-            // نمایش توست با انیمیشن
+            // نمایش toast با انیمیشن
             setTimeout(() => {
                 toast.style.opacity = '1';
                 toast.style.transform = 'translateY(0)';
             }, 10);
             
-            // حذف خودکار توست پس از مدت زمان مشخص
-            if (duration) {
+            // بستن toast با کلیک
+            const closeBtn = toast.querySelector('.toast-close');
+            closeBtn.addEventListener('click', () => {
+                toast.style.animation = 'toastOut 0.3s ease forwards';
                 setTimeout(() => {
-                    if (toast.parentElement) {
-                        toast.style.animation = 'toastOut 0.3s ease forwards';
-                        setTimeout(() => {
-                            if (toast.parentElement) {
-                                toastContainer.removeChild(toast);
-                            }
-                        }, 300);
-                    }
-                }, duration);
-            }
-            
-            return toast;
-        }
-        
-        // مقداردهی اولیه
-        document.addEventListener('DOMContentLoaded', function() {
-            // بررسی اینکه آیا در محیط تلگرام هستیم
-            if (window.Telegram && window.Telegram.WebApp) {
-                tg = window.Telegram.WebApp;
-                tg.expand();
-                tg.enableClosingConfirmation();
-                
-                // اگر کاربر از طریق تلگرام وارد شده، اطلاعاتش را بگیر
-                const initData = tg.initDataUnsafe;
-                if (initData && initData.user) {
-                    checkUserStatus(initData.user.id);
-                } else {
-                    showError('شما از طریق تلگرام وارد نشده‌اید. لطفاً از طریق ربات تلگرام به این پنل دسترسی پیدا کنید.');
-                }
-            } else {
-                // اگر از مرورگر عادی وارد شده
-                showError('این پنل فقط از طریق تلگرام قابل دسترسی است. لطفاً از طریق ربات تلگرام به این پنل دسترسی پیدا کنید.');
-            }
-
-            // تنظیمات حالت تاریک/روشن
-            const themeToggle = document.getElementById('themeToggle');
-            const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
-            
-            // بررسی وضعیت ذخیره شده در localStorage
-            const savedTheme = localStorage.getItem('theme');
-            if (savedTheme === 'dark' || (!savedTheme && prefersDarkScheme.matches)) {
-                document.body.classList.add('dark-mode');
-                themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
-            } else {
-                document.body.classList.remove('dark-mode');
-                themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
-            }
-            
-            // افزودن رویداد کلیک برای تغییر تم
-            themeToggle.addEventListener('click', function() {
-                if (document.body.classList.contains('dark-mode')) {
-                    document.body.classList.remove('dark-mode');
-                    localStorage.setItem('theme', 'light');
-                    themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
-                } else {
-                    document.body.classList.add('dark-mode');
-                    localStorage.setItem('theme', 'dark');
-                    themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
-                }
+                    toastContainer.removeChild(toast);
+                }, 300);
             });
-        });
-        
-        // بررسی وضعیت کاربر
-        async function checkUserStatus(userId) {
-            showLoading();
-            try {
-                const response = await fetch(`${API_BASE}/api/check-user`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        user_id: parseInt(userId)
-                    })
-                });
-                
-                const result = await response.json();
-                
-                if (response.ok) {
-                    if (result.registered) {
-                        currentUser = result.user;
-                        
-                        if (result.hasPassword) {
-                            // کاربر رمز دارد، صفحه لاگین نشان داده شود
-                            showLoginPage();
-                        } else {
-                            // کاربر ثبت شده اما رمز ندارد
-                            showSetupPage();
-                        }
-                    } else {
-                        // کاربر وجود ندارد
-                        showError(result.message || 'شما در سیستم ثبت‌نام نشده‌اید.');
-                    }
-                } else {
-                    showError(result.error || 'خطا در بررسی وضعیت کاربر');
-                }
-            } catch (error) {
-                showError('خطا در ارتباط با سرور: ' + error.message);
-            } finally {
-                hideLoading();
-            }
-        }
-        
-        // لاگین کاربر
-        async function login() {
-            const userId = document.getElementById('userId').value;
-            const password = document.getElementById('password').value;
             
-            if (!password) {
-                showToast('error', 'خطا', 'لطفاً رمز عبور را وارد کنید.');
-                return;
-            }
-            
-            showLoading();
-            try {
-                const response = await fetch(`${API_BASE}/api/auth`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        user_id: parseInt(userId),
-                        password: password
-                    })
-                });
-                
-                const result = await response.json();
-                
-                if (response.ok) {
-                    adminUser = result.user;
-                    
-                    if (['Developer', 'CC Manager', 'CC Director', 'CC Warden'].includes(adminUser.rank)) {
-                        showAdminPanel();
-                    } else {
-                        showUserInfo();
-                    }
-                } else {
-                    showToast('error', 'خطا', result.error || 'خطا در ورود به سیستم');
-                }
-            } catch (error) {
-                showToast('error', 'خطا', 'خطا در ارتباط با سرور: ' + error.message);
-            } finally {
-                hideLoading();
-            }
-        }
-        
-        // تنظیم رمز عبور
-        async function setupPassword() {
-            const newPassword = document.getElementById('newPassword').value;
-            const confirmPassword = document.getElementById('confirmPassword').value;
-            const securityQuestion = document.getElementById('setupSecurityQuestion').value;
-            const securityAnswer = document.getElementById('securityAnswer').value;
-            
-            if (!newPassword || !confirmPassword || !securityQuestion || !securityAnswer) {
-                showToast('error', 'خطا', 'لطفاً تمام فیلدها را پر کنید.');
-                return;
-            }
-            
-            if (newPassword !== confirmPassword) {
-                showToast('error', 'خطا', 'رمز عبور و تکرار آن مطابقت ندارند.');
-                return;
-            }
-            
-            showLoading();
-            try {
-                const response = await fetch(`${API_BASE}/api/setup-password`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        user_id: currentUser.user_id,
-                        password: newPassword,
-                        security_question: securityQuestion,
-                        security_answer: securityAnswer
-                    })
-                });
-                
-                if (response.ok) {
-                    showToast('success', 'موفقیت', 'رمز عبور و سوال امنیتی با موفقیت تنظیم شد.');
-                    
-                    // بعد از تنظیم رمز، وضعیت کاربر را بررسی کن
-                    setTimeout(() => {
-                        if (['Developer', 'CC Manager', 'CC Director', 'CC Warden'].includes(currentUser.rank)) {
-                            showAdminPanel();
-                        } else {
-                            showUserInfo();
-                        }
-                    }, 2000);
-                } else {
-                    const error = await response.json();
-                    showToast('error', 'خطا', error.error || 'خطا در تنظیم رمز عبور');
-                }
-            } catch (error) {
-                showToast('error', 'خطا', 'خطا در ارتباط با سرور: ' + error.message);
-            } finally {
-                hideLoading();
-            }
-        }
-        
-        // افزودن کاربر جدید
-        async function addUser() {
-            const userId = document.getElementById('addUserId').value;
-            const gameName = document.getElementById('addGameName').value;
-            const referral = document.getElementById('addReferral').value;
-            const rank = document.getElementById('addRank').value;
-            const securityQuestion = document.getElementById('addSecurityQuestion').value;
-            const securityAnswer = document.getElementById('addSecurityAnswer').value;
-            
-            if (!userId || !rank || !securityQuestion || !securityAnswer) {
-                showToast('error', 'خطا', 'لطفاً فیلدهای اجباری را پر کنید.');
-                return;
-            }
-            
-            showLoading();
-            try {
-                const response = await fetch(`${API_BASE}/api/add-user`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        admin_id: adminUser.user_id,
-                        security_question: securityQuestion,
-                        security_answer: securityAnswer,
-                        user_id: parseInt(userId),
-                        game_name: gameName,
-                        referral: referral,
-                        rank: rank
-                    })
-                });
-                
-                if (response.ok) {
-                    showToast('success', 'موفقیت', 'کاربر با موفقیت اضافه شد.');
-                    hideAddUserForm();
-                } else {
-                    const error = await response.json();
-                    showToast('error', 'خطا', error.error || 'خطا در افزودن کاربر');
-                }
-            } catch (error) {
-                showToast('error', 'خطا', 'خطا در ارتباط با سرور: ' + error.message);
-            } finally {
-                hideLoading();
-            }
-        }
-        
-        // حذف کاربر
-        async function removeUser() {
-            const userId = document.getElementById('removeUserId').value;
-            const securityQuestion = document.getElementById('removeSecurityQuestion').value;
-            const securityAnswer = document.getElementById('removeSecurityAnswer').value;
-            
-            if (!userId || !securityQuestion || !securityAnswer) {
-                showToast('error', 'خطا', 'لطفاً فیلدهای اجباری را پر کنید.');
-                return;
-            }
-            
-            showLoading();
-            try {
-                const response = await fetch(`${API_BASE}/api/remove-user`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        admin_id: adminUser.user_id,
-                        security_question: securityQuestion,
-                        security_answer: securityAnswer,
-                        user_id: parseInt(userId)
-                    })
-                });
-                
-                if (response.ok) {
-                    showToast('success', 'موفقیت', 'کاربر با موفقیت حذف شد.');
-                    hideRemoveUserForm();
-                } else {
-                    const error = await response.json();
-                    showToast('error', 'خطا', error.error || 'خطا در حذف کاربر');
-                }
-            } catch (error) {
-                showToast('error', 'خطا', 'خطا در ارتباط با سرور: ' + error.message);
-            } finally {
-                hideLoading();
-            }
-        }
-        
-        // دریافت لیست رنک‌های قابل اختصاص
-        async function loadAssignableRanks() {
-            try {
-                const response = await fetch(`${API_BASE}/api/assignable-ranks?admin_id=${adminUser.user_id}`);
-                
-                if (response.ok) {
-                    const ranks = await response.json();
-                    const rankSelect = document.getElementById('addRank');
-                    
-                    rankSelect.innerHTML = '';
-                    ranks.forEach(rank => {
-                        const option = document.createElement('option');
-                        option.value = rank;
-                        option.textContent = rank;
-                        rankSelect.appendChild(option);
-                    });
-                }
-            } catch (error) {
-                console.error('Error loading ranks:', error);
-            }
-        }
-        
-        // توابع نمایش/پنهان کردن صفحات
-        function showLoginPage() {
-            hideAllPages();
-            document.getElementById('loginPage').classList.remove('hidden');
-            document.getElementById('userId').value = currentUser.user_id;
-        }
-        
-        function showSetupPage() {
-            hideAllPages();
-            document.getElementById('setupPage').classList.remove('hidden');
-        }
-        
-        function showUserInfo() {
-            hideAllPages();
-            document.getElementById('userInfoPage').classList.remove('hidden');
-            
-            document.getElementById('userRank').textContent = currentUser.rank;
-            document.getElementById('userGameName').textContent = currentUser.game_name || 'تعریف نشده';
-            document.getElementById('userUserId').textContent = currentUser.user_id;
-            document.getElementById('userReferral').textContent = currentUser.referral || 'تعریف نشده';
-        }
-        
-        function showAdminPanel() {
-            hideAllPages();
-            document.getElementById('adminPanelPage').classList.remove('hidden');
-            
-            document.getElementById('adminName').textContent = adminUser.game_name || adminUser.user_id;
-            document.getElementById('adminRank').textContent = adminUser.rank;
-            document.getElementById('adminUserId').textContent = adminUser.user_id;
-        }
-        
-        function showAddUserForm() {
-            hideAllPages();
-            document.getElementById('addUserForm').classList.remove('hidden');
-            loadAssignableRanks();
-        }
-        
-        function hideAddUserForm() {
-            showAdminPanel();
-        }
-        
-        function showRemoveUserForm() {
-            hideAllPages();
-            document.getElementById('removeUserForm').classList.remove('hidden');
-        }
-        
-        function hideRemoveUserForm() {
-            showAdminPanel();
-        }
-        
-        function showError(message) {
-            hideAllPages();
-            document.getElementById('errorPage').classList.remove('hidden');
-            document.getElementById('errorMessage').textContent = message;
-        }
-        
-        function hideAllPages() {
-            document.getElementById('checkingPage').classList.add('hidden');
-            document.getElementById('errorPage').classList.add('hidden');
-            document.getElementById('loginPage').classList.add('hidden');
-            document.getElementById('setupPage').classList.add('hidden');
-            document.getElementById('userInfoPage').classList.add('hidden');
-            document.getElementById('adminPanelPage').classList.add('hidden');
-            document.getElementById('addUserForm').classList.add('hidden');
-            document.getElementById('removeUserForm').classList.add('hidden');
-        }
-        
-        function showLoading() {
-            document.getElementById('loading').classList.remove('hidden');
-        }
-        
-        function hideLoading() {
-            document.getElementById('loading').classList.add('hidden');
-        }
-        
-        function showMessage(message, type) {
-            const messageDiv = document.getElementById('message');
-            messageDiv.textContent = message;
-            messageDiv.className = type;
-            messageDiv.classList.remove('hidden');
-            
+            // حذف خودکار پس از 5 ثانیه
             setTimeout(() => {
-                messageDiv.classList.add('hidden');
+                if (toast.parentNode === toastContainer) {
+                    toast.style.animation = 'toastOut 0.3s ease forwards';
+                    setTimeout(() => {
+                        if (toast.parentNode === toastContainer) {
+                            toastContainer.removeChild(toast);
+                        }
+                    }, 300);
+                }
             }, 5000);
         }
+        
+        // تابع تغییر تم
+        function toggleTheme() {
+            document.body.classList.toggle('dark-mode');
+            if (document.body.classList.contains('dark-mode')) {
+                themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+                localStorage.setItem('theme', 'dark');
+            } else {
+                themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+                localStorage.setItem('theme', 'light');
+            }
+        }
+        
+        // تابع نمایش صفحه
+        function showPage(page) {
+            checkingPage.classList.add('hidden');
+            errorPage.classList.add('hidden');
+            loginPage.classList.add('hidden');
+            mainPage.classList.add('hidden');
+            addUserPage.classList.add('hidden');
+            removeUserPage.classList.add('hidden');
+            
+            page.classList.remove('hidden');
+        }
+        
+        // تابع بررسی دسترسی کاربر
+        async function checkAccess() {
+            try {
+                // بررسی اینکه آیا کاربر از طریق تلگرام وارد شده
+                tg = window.Telegram.WebApp;
+                
+                if (!tg || !tg.initDataUnsafe || !tg.initDataUnsafe.user) {
+                    showPage(loginPage);
+                    return;
+                }
+                
+                const userId = tg.initDataUnsafe.user.id;
+                
+                // ارسال درخواست به سرور برای بررسی دسترسی
+                const response = await fetch('https://p-admin.hupadr.workers.dev', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        action: 'check_admin',
+                        user_id: userId
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.status === 'success' && data.is_admin) {
+                    isAdmin = true;
+                    isLoggedIn = true;
+                    adminData = data.admin_data;
+                    
+                    // نمایش اطلاعات ادمین
+                    adminName.textContent = adminData.name || 'نامشخص';
+                    adminId.textContent = userId;
+                    adminRank.textContent = adminData.rank || 'ادمین';
+                    
+                    // دریافت تعداد کاربران
+                    const usersResponse = await fetch('https://p-admin.hupadr.workers.dev', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            action: 'get_users_count'
+                        })
+                    });
+                    
+                    const usersData = await usersResponse.json();
+                    if (usersData.status === 'success') {
+                        totalUsers.textContent = usersData.count.toLocaleString();
+                    }
+                    
+                    showPage(mainPage);
+                    showToast('خوش آمدید', `با موفقیت وارد پنل مدیریت شدید.`, 'success');
+                } else {
+                    showPage(errorPage);
+                    errorMessage.textContent = 'شما دسترسی لازم برای ورود به این پنل را ندارید.';
+                }
+            } catch (error) {
+                console.error('Error checking access:', error);
+                showPage(errorPage);
+                errorMessage.textContent = 'خطا در ارتباط با سرور. لطفاً دوباره تلاش کنید.';
+            }
+        }
+        
+        // تابع ورود به سیستم
+        async function login(userId) {
+            try {
+                // ارسال درخواست به سرور برای بررسی دسترسی
+                const response = await fetch('https://p-admin.hupadr.workers.dev', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        action: 'check_admin',
+                        user_id: userId
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.status === 'success' && data.is_admin) {
+                    isAdmin = true;
+                    isLoggedIn = true;
+                    adminData = data.admin_data;
+                    
+                    // نمایش اطلاعات ادمین
+                    adminName.textContent = adminData.name || 'نامشخص';
+                    adminId.textContent = userId;
+                    adminRank.textContent = adminData.rank || 'ادمین';
+                    
+                    // دریافت تعداد کاربران
+                    const usersResponse = await fetch('https://p-admin.hupadr.workers.dev', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            action: 'get_users_count'
+                        })
+                    });
+                    
+                    const usersData = await usersResponse.json();
+                    if (usersData.status === 'success') {
+                        totalUsers.textContent = usersData.count.toLocaleString();
+                    }
+                    
+                    showPage(mainPage);
+                    showToast('خوش آمدید', `با موفقیت وارد پنل مدیریت شدید.`, 'success');
+                } else {
+                    showToast('خطای دسترسی', 'شما دسترسی لازم برای ورود به این پنل را ندارید.', 'error');
+                }
+            } catch (error) {
+                console.error('Error logging in:', error);
+                showToast('خطای ارتباط', 'خطا در ارتباط با سرور. لطفاً دوباره تلاش کنید.', 'error');
+            }
+        }
+        
+        // تابع افزودن کاربر
+        async function addUser(userId, userName) {
+            try {
+                const response = await fetch('https://p-admin.hupadr.workers.dev', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        action: 'add_user',
+                        user_id: userId,
+                        user_name: userName
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    showToast('موفقیت', 'کاربر با موفقیت افزوده شد.', 'success');
+                    showPage(mainPage);
+                    
+                    // بروزرسانی تعداد کاربران
+                    const usersResponse = await fetch('https://p-admin.hupadr.workers.dev', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            action: 'get_users_count'
+                        })
+                    });
+                    
+                    const usersData = await usersResponse.json();
+                    if (usersData.status === 'success') {
+                        totalUsers.textContent = usersData.count.toLocaleString();
+                    }
+                } else {
+                    showToast('خطا', data.message || 'خطا در افزودن کاربر.', 'error');
+                }
+            } catch (error) {
+                console.error('Error adding user:', error);
+                showToast('خطای ارتباط', 'خطا در ارتباط با سرور. لطفاً دوباره تلاش کنید.', 'error');
+            }
+        }
+        
+        // تابع حذف کاربر
+        async function removeUser(userId) {
+            try {
+                const response = await fetch('https://p-admin.hupadr.workers.dev', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        action: 'remove_user',
+                        user_id: userId
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    showToast('موفقیت', 'کاربر با موفقیت حذف شد.', 'success');
+                    showPage(mainPage);
+                    
+                    // بروزرسانی تعداد کاربران
+                    const usersResponse = await fetch('https://p-admin.hupadr.workers.dev', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            action: 'get_users_count'
+                        })
+                    });
+                    
+                    const usersData = await usersResponse.json();
+                    if (usersData.status === 'success') {
+                        totalUsers.textContent = usersData.count.toLocaleString();
+                    }
+                } else {
+                    showToast('خطا', data.message || 'خطا در حذف کاربر.', 'error');
+                }
+            } catch (error) {
+                console.error('Error removing user:', error);
+                showToast('خطای ارتباط', 'خطا در ارتباط با سرور. لطفاً دوباره تلاش کنید.', 'error');
+            }
+        }
+        
+        // رویدادهای پس از لود صفحه
+        document.addEventListener('DOMContentLoaded', function() {
+            // بررسی تم ذخیره شده
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-mode');
+                themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+            }
+            
+            // بررسی دسترسی کاربر
+            checkAccess();
+            
+            // رویداد کلیک برای دکمه تم
+            themeToggle.addEventListener('click', toggleTheme);
+            
+            // رویداد کلیک برای دکمه ورود
+            document.getElementById('loginBtn').addEventListener('click', function() {
+                const userId = document.getElementById('userId').value;
+                if (!userId) {
+                    showToast('خطا', 'لطفاً ایدی کاربر را وارد کنید.', 'error');
+                    return;
+                }
+                
+                login(userId);
+            });
+            
+            // رویداد کلیک برای دکمه افزودن کاربر
+            document.getElementById('addUserBtn').addEventListener('click', function() {
+                showPage(addUserPage);
+            });
+            
+            // رویداد کلیک برای دکمه انصراف افزودن کاربر
+            document.getElementById('cancelAddUserBtn').addEventListener('click', function() {
+                showPage(mainPage);
+            });
+            
+            // رویداد کلیک برای دکمه تأیید افزودن کاربر
+            document.getElementById('submitAddUserBtn').addEventListener('click', function() {
+                const userId = document.getElementById('newUserId').value;
+                const userName = document.getElementById('newUserName').value;
+                
+                if (!userId || !userName) {
+                    showToast('خطا', 'لطفاً تمام فیلدها را پر کنید.', 'error');
+                    return;
+                }
+                
+                addUser(userId, userName);
+            });
+            
+            // رویداد کلیک برای دکمه حذف کاربر
+            document.getElementById('removeUserBtn').addEventListener('click', function() {
+                showPage(removeUserPage);
+            });
+            
+            // رویداد کلیک برای دکمه انصراف حذف کاربر
+            document.getElementById('cancelRemoveUserBtn').addEventListener('click', function() {
+                showPage(mainPage);
+            });
+            
+            // رویداد کلیک برای دکمه تأیید حذف کاربر
+            document.getElementById('submitRemoveUserBtn').addEventListener('click', function() {
+                const userId = document.getElementById('removeUserId').value;
+                
+                if (!userId) {
+                    showToast('خطا', 'لطفاً ایدی کاربر را وارد کنید.', 'error');
+                    return;
+                }
+                
+                removeUser(userId);
+            });
+        });
     </script>
 </body>
 </html>
