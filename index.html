@@ -226,8 +226,16 @@
                     <input type="password" id="newPassword" placeholder="رمز عبور جدید را وارد کنید" />
                 </div>
                 <div class="form-group">
-                    <label for="securityQuestion">سوال امنیتی:</label>
-                    <input type="text" id="securityQuestion" placeholder="مثال: نام اولین معلم شما؟" />
+                    <label for="setupSecurityQuestion">سوال امنیتی:</label>
+                    <select id="setupSecurityQuestion">
+                        <option value="">-- انتخاب سوال امنیتی --</option>
+                        <option value="نام اولین معلم شما؟">نام اولین معلم شما؟</option>
+                        <option value="نام اولین حیوان خانگی شما؟">نام اولین حیوان خانگی شما؟</option>
+                        <option value="شهر تولد شما؟">شهر تولد شما؟</option>
+                        <option value="نام بهترین دوست دوران کودکی شما؟">نام بهترین دوست دوران کودکی شما؟</option>
+                        <option value="مدل اولین ماشین شما؟">مدل اولین ماشین شما؟</option>
+                        <option value="نام مدرسه ابتدایی شما؟">نام مدرسه ابتدایی شما؟</option>
+                    </select>
                 </div>
                 <div class="form-group">
                     <label for="securityAnswer">پاسخ سوال امنیتی:</label>
@@ -285,8 +293,16 @@
                     <select id="addRank"></select>
                 </div>
                 <div class="form-group">
-                    <label for="addSecurityQuestion">سوال امنیتی شما:</label>
-                    <input type="text" id="addSecurityQuestion" value="سوال امنیتی که هنگام تنظیم رمز عبور تنظیم کرده اید" readonly />
+                    <label for="addSecurityQuestion">سوال امنیتی:</label>
+                    <select id="addSecurityQuestion">
+                        <option value="">-- انتخاب سوال امنیتی --</option>
+                        <option value="نام اولین معلم شما؟">نام اولین معلم شما؟</option>
+                        <option value="نام اولین حیوان خانگی شما؟">نام اولین حیوان خانگی شما؟</option>
+                        <option value="شهر تولد شما؟">شهر تولد شما؟</option>
+                        <option value="نام بهترین دوست دوران کودکی شما؟">نام بهترین دوست دوران کودکی شما؟</option>
+                        <option value="مدل اولین ماشین شما؟">مدل اولین ماشین شما؟</option>
+                        <option value="نام مدرسه ابتدایی شما؟">نام مدرسه ابتدایی شما؟</option>
+                    </select>
                 </div>
                 <div class="form-group">
                     <label for="addSecurityAnswer">پاسخ سوال امنیتی:</label>
@@ -304,8 +320,16 @@
                     <input type="number" id="removeUserId" placeholder="مثال: 123456789" />
                 </div>
                 <div class="form-group">
-                    <label for="removeSecurityQuestion">سوال امنیتی شما:</label>
-                    <input type="text" id="removeSecurityQuestion" value="سوال امنیتی که هنگام تنظیم رمز عبور تنظیم کرده اید" readonly />
+                    <label for="removeSecurityQuestion">سوال امنیتی:</label>
+                    <select id="removeSecurityQuestion">
+                        <option value="">-- انتخاب سوال امنیتی --</option>
+                        <option value="نام اولین معلم شما؟">نام اولین معلم شما؟</option>
+                        <option value="نام اولین حیوان خانگی شما؟">نام اولین حیوان خانگی شما؟</option>
+                        <option value="شهر تولد شما؟">شهر تولد شما؟</option>
+                        <option value="نام بهترین دوست دوران کودکی شما؟">نام بهترین دوست دوران کودکی شما؟</option>
+                        <option value="مدل اولین ماشین شما؟">مدل اولین ماشین شما؟</option>
+                        <option value="نام مدرسه ابتدایی شما؟">نام مدرسه ابتدایی شما؟</option>
+                    </select>
                 </div>
                 <div class="form-group">
                     <label for="removeSecurityAnswer">پاسخ سوال امنیتی:</label>
@@ -329,6 +353,16 @@
         let tg = null;
         let currentUser = null;
         let adminUser = null;
+        
+        // لیست سوالات امنیتی
+        const securityQuestions = [
+            "نام اولین معلم شما؟",
+            "نام اولین حیوان خانگی شما؟",
+            "شهر تولد شما؟",
+            "نام بهترین دوست دوران کودکی شما؟",
+            "مدل اولین ماشین شما؟",
+            "نام مدرسه ابتدایی شما؟"
+        ];
         
         // مقداردهی اولیه
         document.addEventListener('DOMContentLoaded', function() {
@@ -418,9 +452,11 @@
                 const result = await response.json();
                 
                 if (response.ok) {
-                    adminUser = result.user;
+                    currentUser = result.user;
                     
-                    if (['Developer', 'CC Manager', 'CC Director', 'CC Warden'].includes(adminUser.rank)) {
+                    // بررسی رنک کاربر
+                    if (result.user.rank === 'admin' || result.user.rank === 'owner') {
+                        adminUser = result.user;
                         showAdminPanel();
                     } else {
                         showUserInfo();
@@ -438,11 +474,16 @@
         // تنظیم رمز عبور
         async function setupPassword() {
             const newPassword = document.getElementById('newPassword').value;
-            const securityQuestion = document.getElementById('securityQuestion').value;
+            const securityQuestion = document.getElementById('setupSecurityQuestion').value;
             const securityAnswer = document.getElementById('securityAnswer').value;
             
-            if (!newPassword || !securityQuestion || !securityAnswer) {
-                showMessage('لطفاً تمام فیلدها را پر کنید.', 'error');
+            if (!newPassword) {
+                showMessage('لطفاً رمز عبور جدید را وارد کنید.', 'error');
+                return;
+            }
+            
+            if (!securityQuestion || !securityAnswer) {
+                showMessage('لطفاً سوال امنیتی و پاسخ آن را انتخاب کنید.', 'error');
                 return;
             }
             
@@ -461,20 +502,20 @@
                     })
                 });
                 
+                const result = await response.json();
+                
                 if (response.ok) {
                     showMessage('رمز عبور و سوال امنیتی با موفقیت تنظیم شد.', 'success');
                     
-                    // بعد از تنظیم رمز، وضعیت کاربر را بررسی کن
-                    setTimeout(() => {
-                        if (['Developer', 'CC Manager', 'CC Director', 'CC Warden'].includes(currentUser.rank)) {
-                            showAdminPanel();
-                        } else {
-                            showUserInfo();
-                        }
-                    }, 2000);
+                    // بررسی رنک کاربر
+                    if (currentUser.rank === 'admin' || currentUser.rank === 'owner') {
+                        adminUser = currentUser;
+                        setTimeout(() => showAdminPanel(), 2000);
+                    } else {
+                        setTimeout(() => showUserInfo(), 2000);
+                    }
                 } else {
-                    const error = await response.json();
-                    showMessage(error.error || 'خطا در تنظیم رمز عبور', 'error');
+                    showMessage(result.error || 'خطا در تنظیم رمز عبور', 'error');
                 }
             } catch (error) {
                 showMessage('خطا در ارتباط با سرور: ' + error.message, 'error');
@@ -489,10 +530,16 @@
             const gameName = document.getElementById('addGameName').value;
             const referral = document.getElementById('addReferral').value;
             const rank = document.getElementById('addRank').value;
+            const securityQuestion = document.getElementById('addSecurityQuestion').value;
             const securityAnswer = document.getElementById('addSecurityAnswer').value;
             
-            if (!userId || !rank || !securityAnswer) {
-                showMessage('لطفاً فیلدهای اجباری را پر کنید.', 'error');
+            if (!userId || !gameName || !referral || !rank) {
+                showMessage('لطفاً تمام فیلدهای ضروری را پر کنید.', 'error');
+                return;
+            }
+            
+            if (!securityQuestion || !securityAnswer) {
+                showMessage('لطفاً سوال امنیتی و پاسخ آن را انتخاب کنید.', 'error');
                 return;
             }
             
@@ -504,21 +551,22 @@
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        admin_id: adminUser.user_id,
-                        security_answer: securityAnswer,
                         user_id: parseInt(userId),
                         game_name: gameName,
                         referral: referral,
-                        rank: rank
+                        rank: rank,
+                        security_question: securityQuestion,
+                        security_answer: securityAnswer
                     })
                 });
                 
+                const result = await response.json();
+                
                 if (response.ok) {
-                    showMessage('کاربر با موفقیت اضافه شد.', 'success');
-                    hideAddUserForm();
+                    showMessage('کاربر با موفقیت افزوده شد.', 'success');
+                    setTimeout(() => hideAddUserForm(), 2000);
                 } else {
-                    const error = await response.json();
-                    showMessage(error.error || 'خطا در افزودن کاربر', 'error');
+                    showMessage(result.error || 'خطا در افزودن کاربر', 'error');
                 }
             } catch (error) {
                 showMessage('خطا در ارتباط با سرور: ' + error.message, 'error');
@@ -530,10 +578,16 @@
         // حذف کاربر
         async function removeUser() {
             const userId = document.getElementById('removeUserId').value;
+            const securityQuestion = document.getElementById('removeSecurityQuestion').value;
             const securityAnswer = document.getElementById('removeSecurityAnswer').value;
             
-            if (!userId || !securityAnswer) {
-                showMessage('لطفاً فیل드های اجباری را پر کنید.', 'error');
+            if (!userId) {
+                showMessage('لطفاً ایدی عددی کاربر را وارد کنید.', 'error');
+                return;
+            }
+            
+            if (!securityQuestion || !securityAnswer) {
+                showMessage('لطفاً سوال امنیتی و پاسخ آن را انتخاب کنید.', 'error');
                 return;
             }
             
@@ -545,18 +599,19 @@
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        admin_id: adminUser.user_id,
-                        security_answer: securityAnswer,
-                        user_id: parseInt(userId)
+                        user_id: parseInt(userId),
+                        security_question: securityQuestion,
+                        security_answer: securityAnswer
                     })
                 });
                 
+                const result = await response.json();
+                
                 if (response.ok) {
                     showMessage('کاربر با موفقیت حذف شد.', 'success');
-                    hideRemoveUserForm();
+                    setTimeout(() => hideRemoveUserForm(), 2000);
                 } else {
-                    const error = await response.json();
-                    showMessage(error.error || 'خطا در حذف کاربر', 'error');
+                    showMessage(result.error || 'خطا در حذف کاربر', 'error');
                 }
             } catch (error) {
                 showMessage('خطا در ارتباط با سرور: ' + error.message, 'error');
@@ -565,29 +620,53 @@
             }
         }
         
-        // دریافت لیست رنک‌های قابل اختصاص
-        async function loadAssignableRanks() {
-            try {
-                const response = await fetch(`${API_BASE}/api/assignable-ranks?admin_id=${adminUser.user_id}`);
-                
-                if (response.ok) {
-                    const ranks = await response.json();
-                    const rankSelect = document.getElementById('addRank');
-                    
-                    rankSelect.innerHTML = '';
-                    ranks.forEach(rank => {
-                        const option = document.createElement('option');
-                        option.value = rank;
-                        option.textContent = rank;
-                        rankSelect.appendChild(option);
-                    });
-                }
-            } catch (error) {
-                console.error('Error loading ranks:', error);
-            }
+        // نمایش فرم افزودن کاربر
+        function showAddUserForm() {
+            document.getElementById('adminPanelPage').classList.add('hidden');
+            document.getElementById('addUserForm').classList.remove('hidden');
+            
+            // پر کردن لیست رنک‌ها
+            const rankSelect = document.getElementById('addRank');
+            rankSelect.innerHTML = '';
+            
+            const ranks = ['user', 'vip', 'admin', 'owner'];
+            ranks.forEach(rank => {
+                const option = document.createElement('option');
+                option.value = rank;
+                option.textContent = rank;
+                rankSelect.appendChild(option);
+            });
         }
         
-        // توابع نمایش/پنهان کردن صفحات
+        // پنهان کردن فرم افزودن کاربر
+        function hideAddUserForm() {
+            document.getElementById('addUserForm').classList.add('hidden');
+            document.getElementById('adminPanelPage').classList.remove('hidden');
+            
+            // پاک کردن فیلدها
+            document.getElementById('addUserId').value = '';
+            document.getElementById('addGameName').value = '';
+            document.getElementById('addReferral').value = '';
+            document.getElementById('addSecurityAnswer').value = '';
+        }
+        
+        // نمایش فرم حذف کاربر
+        function showRemoveUserForm() {
+            document.getElementById('adminPanelPage').classList.add('hidden');
+            document.getElementById('removeUserForm').classList.remove('hidden');
+        }
+        
+        // پنهان کردن فرم حذف کاربر
+        function hideRemoveUserForm() {
+            document.getElementById('removeUserForm').classList.add('hidden');
+            document.getElementById('adminPanelPage').classList.remove('hidden');
+            
+            // پاک کردن فیلدها
+            document.getElementById('removeUserId').value = '';
+            document.getElementById('removeSecurityAnswer').value = '';
+        }
+        
+        // نمایش صفحات مختلف
         function showLoginPage() {
             hideAllPages();
             document.getElementById('loginPage').classList.remove('hidden');
@@ -604,41 +683,18 @@
             document.getElementById('userInfoPage').classList.remove('hidden');
             
             document.getElementById('userRank').textContent = currentUser.rank;
-            document.getElementById('userGameName').textContent = currentUser.game_name || 'تعریف نشده';
+            document.getElementById('userGameName').textContent = currentUser.game_name;
             document.getElementById('userUserId').textContent = currentUser.user_id;
-            document.getElementById('userReferral').textContent = currentUser.referral || 'تعریف نشده';
+            document.getElementById('userReferral').textContent = currentUser.referral;
         }
         
         function showAdminPanel() {
             hideAllPages();
             document.getElementById('adminPanelPage').classList.remove('hidden');
             
-            document.getElementById('adminName').textContent = adminUser.game_name || adminUser.user_id;
-            document.getElementById('adminRank').textContent = adminUser.rank;
-            document.getElementById('adminUserId').textContent = adminUser.user_id;
-            
-            // بارگذاری سوال امنیتی برای فرم‌ها
-            document.getElementById('addSecurityQuestion').value = currentUser.security_question || '';
-            document.getElementById('removeSecurityQuestion').value = currentUser.security_question || '';
-        }
-        
-        function showAddUserForm() {
-            hideAllPages();
-            document.getElementById('addUserForm').classList.remove('hidden');
-            loadAssignableRanks();
-        }
-        
-        function hideAddUserForm() {
-            showAdminPanel();
-        }
-        
-        function showRemoveUserForm() {
-            hideAllPages();
-            document.getElementById('removeUserForm').classList.remove('hidden');
-        }
-        
-        function hideRemoveUserForm() {
-            showAdminPanel();
+            document.getElementById('adminName').textContent = currentUser.game_name;
+            document.getElementById('adminRank').textContent = currentUser.rank;
+            document.getElementById('adminUserId').textContent = currentUser.user_id;
         }
         
         function showError(message) {
@@ -648,14 +704,14 @@
         }
         
         function hideAllPages() {
-            document.getElementById('checkingPage').classList.add('hidden');
-            document.getElementById('errorPage').classList.add('hidden');
-            document.getElementById('loginPage').classList.add('hidden');
-            document.getElementById('setupPage').classList.add('hidden');
-            document.getElementById('userInfoPage').classList.add('hidden');
-            document.getElementById('adminPanelPage').classList.add('hidden');
-            document.getElementById('addUserForm').classList.add('hidden');
-            document.getElementById('removeUserForm').classList.add('hidden');
+            const pages = [
+                'checkingPage', 'errorPage', 'loginPage', 'setupPage',
+                'userInfoPage', 'adminPanelPage', 'addUserForm', 'removeUserForm'
+            ];
+            
+            pages.forEach(page => {
+                document.getElementById(page).classList.add('hidden');
+            });
         }
         
         function showLoading() {
