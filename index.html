@@ -5,323 +5,640 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>پنل مدیریت ادمین‌ها</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
     <style>
+        :root {
+            --primary: #4361ee;
+            --primary-light: #4895ef;
+            --secondary: #3a0ca3;
+            --success: #4cc9f0;
+            --danger: #f72585;
+            --warning: #f8961e;
+            --info: #2ec4b6;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --surface: #ffffff;
+            --background: #f0f2f5;
+            --text-primary: #212529;
+            --text-secondary: #6c757d;
+            --border: #dee2e6;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+            --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+            --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1), 0 5px 10px rgba(0, 0, 0, 0.05);
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        [data-theme="dark"] {
+            --surface: #1a1d21;
+            --background: #121416;
+            --text-primary: #f8f9fa;
+            --text-secondary: #adb5bd;
+            --border: #444950;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4), 0 1px 2px rgba(0, 0, 0, 0.5);
+            --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.3), 0 1px 3px rgba(0, 0, 0, 0.25);
+            --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.35), 0 5px 10px rgba(0, 0, 0, 0.2);
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-        
+
         body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background-color: var(--background);
+            color: var(--text-primary);
+            font-family: 'Vazirmatn', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             min-height: 100vh;
-            padding: 20px;
-            color: #333;
+            padding: 0;
+            transition: var(--transition);
+            line-height: 1.6;
         }
-        
-        .container {
+
+        .app-container {
+            max-width: 100%;
+            min-height: 100vh;
+            padding: 0;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header Styles */
+        .header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 16px 20px;
+            box-shadow: var(--shadow-md);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .header-title h1 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .theme-toggle {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+            color: white;
+        }
+
+        .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 20px;
             max-width: 800px;
             margin: 0 auto;
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            overflow: hidden;
-        }
-        
-        .header {
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-            color: white;
-            padding: 20px;
-            text-align: center;
-        }
-        
-        .header h1 {
-            font-size: 24px;
-            margin-bottom: 5px;
-        }
-        
-        .content {
-            padding: 20px;
-        }
-        
-        .section {
-            margin-bottom: 30px;
-            padding: 20px;
-            border: 1px solid #e0e0e0;
-            border-radius: 10px;
-            background: #f9f9f9;
-        }
-        
-        .section h2 {
-            color: #4facfe;
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #4facfe;
-        }
-        
-        .form-group {
-            margin-bottom: 15px;
-        }
-        
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-            color: #555;
-        }
-        
-        .form-group input,
-        .form-group select,
-        .form-group textarea {
             width: 100%;
-            padding: 12px;
-            border: 2px solid #ddd;
-            border-radius: 8px;
-            font-size: 16px;
-            transition: border-color 0.3s;
         }
-        
-        .form-group input:focus,
-        .form-group select:focus,
-        .form-group textarea:focus {
-            border-color: #4facfe;
-            outline: none;
+
+        /* Card Component */
+        .card {
+            background-color: var(--surface);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 24px;
+            overflow: hidden;
+            transition: var(--transition);
         }
-        
-        .btn {
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-            color: white;
-            border: none;
-            padding: 12px 25px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: bold;
-            transition: transform 0.2s, box-shadow 0.2s;
-            display: inline-block;
-            text-align: center;
-            margin: 5px;
+
+        .card:hover {
+            box-shadow: var(--shadow-md);
         }
-        
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(79, 172, 254, 0.4);
+
+        .card-header {
+            padding: 20px 20px 0;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
         }
-        
-        .btn-danger {
-            background: linear-gradient(135deg, #ff758c 0%, #ff7eb3 100%);
+
+        .card-header h2 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--text-primary);
         }
-        
-        .btn-success {
-            background: linear-gradient(135deg, #56ab2f 0%, #a8e063 100%);
+
+        .card-body {
+            padding: 0 20px 20px;
         }
-        
-        .user-info {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            color: white;
-            padding: 15px;
-            border-radius: 10px;
+
+        /* Form Styles */
+        .form-group {
             margin-bottom: 20px;
         }
-        
-        .user-info p {
-            margin: 5px 0;
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text-primary);
+            font-size: 0.875rem;
         }
-        
-        .hidden {
-            display: none;
+
+        .form-control {
+            width: 100%;
+            padding: 14px 16px;
+            background-color: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            font-size: 1rem;
+            color: var(--text-primary);
+            transition: var(--transition);
         }
-        
-        .loading {
-            text-align: center;
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.15);
+        }
+
+        /* Button Styles */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 24px;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-size: 0.9375rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            line-height: 1;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 4px 12px rgba(67, 97, 238, 0.25);
+            transform: translateY(-2px);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, var(--success) 0%, #2a9d8f 100%);
+            color: white;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, var(--danger) 0%, #b5179e 100%);
+            color: white;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+        }
+
+        .btn-outline:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+
+        .btn-sm {
+            padding: 8px 16px;
+            font-size: 0.875rem;
+        }
+
+        .btn-icon {
+            padding: 10px;
+            border-radius: 50%;
+        }
+
+        /* User Info */
+        .user-info {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
             padding: 20px;
+            border-radius: var(--radius-md);
+            margin-bottom: 20px;
         }
-        
-        .error {
-            background: #ffebee;
-            color: #c62828;
-            padding: 10px;
-            border-radius: 5px;
-            margin: 10px 0;
-            border: 1px solid #ef9a9a;
+
+        .user-info-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
-        
-        .success {
-            background: #e8f5e9;
-            color: #2e7d32;
-            padding: 10px;
-            border-radius: 5px;
-            margin: 10px 0;
-            border: 1px solid #a5d6a7;
+
+        .user-info-item:last-child {
+            border-bottom: none;
         }
-        
-        .warning {
-            background: #fff3cd;
-            color: #856404;
-            padding: 10px;
-            border-radius: 5px;
-            margin: 10px 0;
-            border: 1px solid #ffeaa7;
+
+        /* Utility Classes */
+        .hidden {
+            display: none !important;
         }
-        
+
+        .text-center {
+            text-align: center;
+        }
+
+        .mt-3 {
+            margin-top: 16px;
+        }
+
+        .mb-3 {
+            margin-bottom: 16px;
+        }
+
+        .d-flex {
+            display: flex;
+        }
+
+        .justify-content-between {
+            justify-content: space-between;
+        }
+
+        .align-items-center {
+            align-items: center;
+        }
+
+        .gap-2 {
+            gap: 8px;
+        }
+
+        /* Loading Spinner */
+        .spinner {
+            width: 40px;
+            height: 40px;
+            margin: 20px auto;
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-left-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Alert Messages */
+        .alert {
+            padding: 16px;
+            border-radius: var(--radius-sm);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .alert-error {
+            background-color: rgba(247, 37, 133, 0.1);
+            color: var(--danger);
+            border-left: 4px solid var(--danger);
+        }
+
+        .alert-success {
+            background-color: rgba(76, 201, 240, 0.1);
+            color: var(--success);
+            border-left: 4px solid var(--success);
+        }
+
+        .alert-warning {
+            background-color: rgba(248, 150, 30, 0.1);
+            color: var(--warning);
+            border-left: 4px solid var(--warning);
+        }
+
+        /* Responsive Design */
         @media (max-width: 768px) {
-            .container {
-                margin: 10px;
-                border-radius: 10px;
+            .header {
+                padding: 14px 16px;
             }
             
-            .header h1 {
-                font-size: 20px;
+            .header-title h1 {
+                font-size: 1.125rem;
+            }
+            
+            .main-content {
+                padding: 16px;
+            }
+            
+            .card {
+                border-radius: var(--radius-md);
+            }
+            
+            .card-header, .card-body {
+                padding: 16px;
+            }
+            
+            .btn-group {
+                flex-direction: column;
             }
             
             .btn {
                 width: 100%;
-                margin: 5px 0;
+                margin: 4px 0;
             }
+        }
+
+        /* Animation */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-fadeIn {
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        /* Material Icons Adjustments */
+        .material-icons {
+            font-size: 1.25rem;
+            vertical-align: middle;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>🤖 پنل مدیریت ادمین‌ها</h1>
-            <p>سیستم مدیریت دسترسی‌های پلتفرم</p>
-        </div>
-        
-        <div class="content">
+    <div class="app-container">
+        <header class="header">
+            <div class="header-title">
+                <i class="material-icons">admin_panel_settings</i>
+                <h1>پنل مدیریت ادمین‌ها</h1>
+            </div>
+            <div class="header-actions">
+                <button class="theme-toggle" id="themeToggle">
+                    <i class="material-icons">dark_mode</i>
+                </button>
+            </div>
+        </header>
+
+        <main class="main-content">
             <!-- صفحه بررسی وضعیت -->
-            <div id="checkingPage" class="section">
-                <h2>🔍 در حال بررسی دسترسی‌ها</h2>
-                <p>لطفاً منتظر بمانید...</p>
+            <div id="checkingPage" class="card animate-fadeIn">
+                <div class="card-header">
+                    <i class="material-icons">search</i>
+                    <h2>در حال بررسی دسترسی‌ها</h2>
+                </div>
+                <div class="card-body text-center">
+                    <div class="spinner"></div>
+                    <p>لطفاً منتظر بمانید...</p>
+                </div>
             </div>
             
             <!-- صفحه خطا -->
-            <div id="errorPage" class="section hidden">
-                <h2>❌ خطا در دسترسی</h2>
-                <div class="error">
-                    <p id="errorMessage"></p>
+            <div id="errorPage" class="card hidden">
+                <div class="card-header">
+                    <i class="material-icons">error</i>
+                    <h2>خطا در دسترسی</h2>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-error">
+                        <i class="material-icons">error_outline</i>
+                        <p id="errorMessage"></p>
+                    </div>
                 </div>
             </div>
             
             <!-- صفحه لاگین -->
-            <div id="loginPage" class="section hidden">
-                <h2>🔐 ورود به سیستم</h2>
-                <div class="form-group">
-                    <label for="userId">ایدی عددی کاربر:</label>
-                    <input type="number" id="userId" placeholder="مثال: 123456789" readonly />
+            <div id="loginPage" class="card hidden">
+                <div class="card-header">
+                    <i class="material-icons">lock</i>
+                    <h2>ورود به سیستم</h2>
                 </div>
-                <div class="form-group">
-                    <label for="password">رمز عبور:</label>
-                    <input type="password" id="password" placeholder="رمز عبور خود را وارد کنید" />
+                <div class="card-body">
+                    <div class="form-group">
+                        <label for="userId" class="form-label">ایدی عددی کاربر:</label>
+                        <input type="number" id="userId" class="form-control" placeholder="مثال: 123456789" readonly />
+                    </div>
+                    <div class="form-group">
+                        <label for="password" class="form-label">رمز عبور:</label>
+                        <input type="password" id="password" class="form-control" placeholder="رمز عبور خود را وارد کنید" />
+                    </div>
+                    <button class="btn btn-primary" onclick="login()">
+                        <i class="material-icons">login</i>
+                        ورود به سیستم
+                    </button>
                 </div>
-                <button class="btn" onclick="login()">ورود به سیستم</button>
             </div>
             
             <!-- صفحه تنظیم رمز عبور -->
-            <div id="setupPage" class="section hidden">
-                <h2>⚙️ تنظیم رمز عبور</h2>
-                <div class="form-group">
-                    <label for="newPassword">رمز عبور جدید:</label>
-                    <input type="password" id="newPassword" placeholder="رمز عبور جدید را وارد کنید" />
+            <div id="setupPage" class="card hidden">
+                <div class="card-header">
+                    <i class="material-icons">settings</i>
+                    <h2>تنظیم رمز عبور</h2>
                 </div>
-                <div class="form-group">
-                    <label for="securityQuestion">سوال امنیتی:</label>
-                    <input type="text" id="securityQuestion" placeholder="مثال: نام اولین معلم شما؟" />
+                <div class="card-body">
+                    <div class="form-group">
+                        <label for="newPassword" class="form-label">رمز عبور جدید:</label>
+                        <input type="password" id="newPassword" class="form-control" placeholder="رمز عبور جدید را وارد کنید" />
+                    </div>
+                    <div class="form-group">
+                        <label for="securityQuestion" class="form-label">سوال امنیتی:</label>
+                        <input type="text" id="securityQuestion" class="form-control" placeholder="مثال: نام اولین معلم شما؟" />
+                    </div>
+                    <div class="form-group">
+                        <label for="securityAnswer" class="form-label">پاسخ سوال امنیتی:</label>
+                        <input type="text" id="securityAnswer" class="form-control" placeholder="پاسخ سوال امنیتی را وارد کنید" />
+                    </div>
+                    <button class="btn btn-success" onclick="setupPassword()">
+                        <i class="material-icons">save</i>
+                        ذخیره تنظیمات
+                    </button>
                 </div>
-                <div class="form-group">
-                    <label for="securityAnswer">پاسخ سوال امنیتی:</label>
-                    <input type="text" id="securityAnswer" placeholder="پاسخ سوال امنیتی را وارد کنید" />
-                </div>
-                <button class="btn btn-success" onclick="setupPassword()">ذخیره تنظیمات</button>
             </div>
             
             <!-- صفحه اطلاعات کاربر -->
-            <div id="userInfoPage" class="section hidden">
-                <div class="user-info">
-                    <h2>✅ هویت شما تایید شد</h2>
-                    <p><strong>رنک شما:</strong> <span id="userRank"></span></p>
-                    <p><strong>نیم گیم شما:</strong> <span id="userGameName"></span></p>
-                    <p><strong>ایدی عددی شما:</strong> <span id="userUserId"></span></p>
-                    <p><strong>رفرال شما:</strong> <span id="userReferral"></span></p>
+            <div id="userInfoPage" class="card hidden">
+                <div class="card-header">
+                    <i class="material-icons">verified_user</i>
+                    <h2>هویت شما تایید شد</h2>
                 </div>
-                <p style="text-align: center; margin-top: 20px;">
-                    بزودی پنل‌های مربوطه برای شما هم در دسترس قرار می‌گیرد.
-                </p>
+                <div class="card-body">
+                    <div class="user-info">
+                        <div class="user-info-item">
+                            <span>رنک شما:</span>
+                            <strong id="userRank"></strong>
+                        </div>
+                        <div class="user-info-item">
+                            <span>نیم گیم شما:</span>
+                            <strong id="userGameName"></strong>
+                        </div>
+                        <div class="user-info-item">
+                            <span>ایدی عددی شما:</span>
+                            <strong id="userUserId"></strong>
+                        </div>
+                        <div class="user-info-item">
+                            <span>رفرال شما:</span>
+                            <strong id="userReferral"></strong>
+                        </div>
+                    </div>
+                    <p class="text-center mt-3">
+                        بزودی پنل‌های مربوطه برای شما هم در دسترس قرار می‌گیرد.
+                    </p>
+                </div>
             </div>
             
             <!-- صفحه پنل مدیریت -->
-            <div id="adminPanelPage" class="section hidden">
-                <h2>👨‍💼 پنل مدیریت</h2>
-                <div class="user-info">
-                    <p><strong>خوش آمدید:</strong> <span id="adminName"></span></p>
-                    <p><strong>رنک شما:</strong> <span id="adminRank"></span></p>
-                    <p><strong>ایدی عددی:</strong> <span id="adminUserId"></span></p>
+            <div id="adminPanelPage" class="card hidden">
+                <div class="card-header">
+                    <i class="material-icons">admin_panel_settings</i>
+                    <h2>پنل مدیریت</h2>
                 </div>
-                
-                <div style="margin: 20px 0;">
-                    <button class="btn btn-success" onclick="showAddUserForm()">➕ افزودن کاربر جدید</button>
-                    <button class="btn btn-danger" onclick="showRemoveUserForm()">🗑️ حذف کاربر</button>
+                <div class="card-body">
+                    <div class="user-info">
+                        <div class="user-info-item">
+                            <span>خوش آمدید:</span>
+                            <strong id="adminName"></strong>
+                        </div>
+                        <div class="user-info-item">
+                            <span>رنک شما:</span>
+                            <strong id="adminRank"></strong>
+                        </div>
+                        <div class="user-info-item">
+                            <span>ایدی عددی:</span>
+                            <strong id="adminUserId"></strong>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between mt-3 btn-group">
+                        <button class="btn btn-success" onclick="showAddUserForm()">
+                            <i class="material-icons">person_add</i>
+                            افزودن کاربر
+                        </button>
+                        <button class="btn btn-danger" onclick="showRemoveUserForm()">
+                            <i class="material-icons">person_remove</i>
+                            حذف کاربر
+                        </button>
+                    </div>
                 </div>
             </div>
             
             <!-- فرم افزودن کاربر -->
-            <div id="addUserForm" class="section hidden">
-                <h2>➕ افزودن کاربر جدید</h2>
-                <div class="form-group">
-                    <label for="addUserId">ایدی عددی کاربر:</label>
-                    <input type="number" id="addUserId" placeholder="مثال: 123456789" />
+            <div id="addUserForm" class="card hidden">
+                <div class="card-header">
+                    <i class="material-icons">person_add</i>
+                    <h2>افزودن کاربر جدید</h2>
                 </div>
-                <div class="form-group">
-                    <label for="addGameName">نیم گیم:</label>
-                    <input type="text" id="addGameName" placeholder="نام در بازی" />
+                <div class="card-body">
+                    <div class="form-group">
+                        <label for="addUserId" class="form-label">ایدی عددی کاربر:</label>
+                        <input type="number" id="addUserId" class="form-control" placeholder="مثال: 123456789" />
+                    </div>
+                    <div class="form-group">
+                        <label for="addGameName" class="form-label">نیم گیم:</label>
+                        <input type="text" id="addGameName" class="form-control" placeholder="نام در بازی" />
+                    </div>
+                    <div class="form-group">
+                        <label for="addReferral" class="form-label">رفرال:</label>
+                        <input type="text" id="addReferral" class="form-control" placeholder="کد رفرال" />
+                    </div>
+                    <div class="form-group">
+                        <label for="addRank" class="form-label">رنک مربوطه:</label>
+                        <select id="addRank" class="form-control"></select>
+                    </div>
+                    <div class="form-group">
+                        <label for="addSecurityQuestion" class="form-label">سوال امنیتی شما:</label>
+                        <input type="text" id="addSecurityQuestion" class="form-control" value="سوال امنیتی که هنگام تنظیم رمز عبور تنظیم کرده اید" readonly />
+                    </div>
+                    <div class="form-group">
+                        <label for="addSecurityAnswer" class="form-label">پاسخ سوال امنیتی:</label>
+                        <input type="text" id="addSecurityAnswer" class="form-control" placeholder="پاسخ سوال امنیتی خود را وارد کنید" />
+                    </div>
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-success" onclick="addUser()">
+                            <i class="material-icons">check</i>
+                            افزودن کاربر
+                        </button>
+                        <button class="btn btn-outline" onclick="hideAddUserForm()">
+                            <i class="material-icons">arrow_back</i>
+                            بازگشت
+                        </button>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="addReferral">رفرال:</label>
-                    <input type="text" id="addReferral" placeholder="کد رفرال" />
-                </div>
-                <div class="form-group">
-                    <label for="addRank">رنک مربوطه:</label>
-                    <select id="addRank"></select>
-                </div>
-                <div class="form-group">
-                    <label for="addSecurityQuestion">سوال امنیتی شما:</label>
-                    <input type="text" id="addSecurityQuestion" value="سوال امنیتی که هنگام تنظیم رمز عبور تنظیم کرده اید" readonly />
-                </div>
-                <div class="form-group">
-                    <label for="addSecurityAnswer">پاسخ سوال امنیتی:</label>
-                    <input type="text" id="addSecurityAnswer" placeholder="پاسخ سوال امنیتی خود را وارد کنید" />
-                </div>
-                <button class="btn btn-success" onclick="addUser()">افزودن کاربر</button>
-                <button class="btn" onclick="hideAddUserForm()">بازگشت</button>
             </div>
             
             <!-- فرم حذف کاربر -->
-            <div id="removeUserForm" class="section hidden">
-                <h2>🗑️ حذف کاربر</h2>
-                <div class="form-group">
-                    <label for="removeUserId">ایدی عددی کاربر:</label>
-                    <input type="number" id="removeUserId" placeholder="مثال: 123456789" />
+            <div id="removeUserForm" class="card hidden">
+                <div class="card-header">
+                    <i class="material-icons">person_remove</i>
+                    <h2>حذف کاربر</h2>
                 </div>
-                <div class="form-group">
-                    <label for="removeSecurityQuestion">سوال امنیتی شما:</label>
-                    <input type="text" id="removeSecurityQuestion" value="سوال امنیتی که هنگام تنظیم رمز عبور تنظیم کرده اید" readonly />
+                <div class="card-body">
+                    <div class="form-group">
+                        <label for="removeUserId" class="form-label">ایدی عددی کاربر:</label>
+                        <input type="number" id="removeUserId" class="form-control" placeholder="مثال: 123456789" />
+                    </div>
+                    <div class="form-group">
+                        <label for="removeSecurityQuestion" class="form-label">سوال امنیتی شما:</label>
+                        <input type="text" id="removeSecurityQuestion" class="form-control" value="سوال امنیتی که هنگام تنظیم رمز عبور تنظیم کرده اید" readonly />
+                    </div>
+                    <div class="form-group">
+                        <label for="removeSecurityAnswer" class="form-label">پاسخ سوال امنیتی:</label>
+                        <input type="text" id="removeSecurityAnswer" class="form-control" placeholder="پاسخ سوال امنیتی خود را وارد کنید" />
+                    </div>
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-danger" onclick="removeUser()">
+                            <i class="material-icons">delete</i>
+                            حذف کاربر
+                        </button>
+                        <button class="btn btn-outline" onclick="hideRemoveUserForm()">
+                            <i class="material-icons">arrow_back</i>
+                            بازگشت
+                        </button>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="removeSecurityAnswer">پاسخ سوال امنیتی:</label>
-                    <input type="text" id="removeSecurityAnswer" placeholder="پاسخ سوال امنیتی خود را وارد کنید" />
-                </div>
-                <button class="btn btn-danger" onclick="removeUser()">حذف کاربر</button>
-                <button class="btn" onclick="hideRemoveUserForm()">بازگشت</button>
             </div>
             
             <!-- وضعیت بارگذاری و پیام‌ها -->
-            <div id="loading" class="loading hidden">
-                <p>در حال بارگذاری...</p>
+            <div id="loading" class="card hidden">
+                <div class="card-body text-center">
+                    <div class="spinner"></div>
+                    <p>در حال بارگذاری...</p>
+                </div>
             </div>
             
             <div id="message" class="hidden"></div>
-        </div>
+        </main>
     </div>
 
     <script>
@@ -329,9 +646,23 @@
         let tg = null;
         let currentUser = null;
         let adminUser = null;
+        let currentTheme = 'light';
         
         // مقداردهی اولیه
         document.addEventListener('DOMContentLoaded', function() {
+            // بررسی و تنظیم تم
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                setTheme(savedTheme);
+            } else {
+                // بررسی تم پیش‌فرض سیستم
+                const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                setTheme(prefersDark ? 'dark' : 'light');
+            }
+            
+            // افزودن رویداد به دکمه تغییر تم
+            document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+            
             // بررسی اینکه آیا در محیط تلگرام هستیم
             if (window.Telegram && window.Telegram.WebApp) {
                 tg = window.Telegram.WebApp;
@@ -350,6 +681,23 @@
                 showError('این پنل فقط از طریق تلگرام قابل دسترسی است. لطفاً از طریق ربات تلگرام به این پنل دسترسی پیدا کنید.');
             }
         });
+        
+        // تغییر تم
+        function toggleTheme() {
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            setTheme(newTheme);
+        }
+        
+        // تنظیم تم
+        function setTheme(theme) {
+            currentTheme = theme;
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+            
+            // تغییر آیکون دکمه
+            const themeIcon = document.querySelector('#themeToggle .material-icons');
+            themeIcon.textContent = theme === 'light' ? 'dark_mode' : 'light_mode';
+        }
         
         // بررسی وضعیت کاربر
         async function checkUserStatus(userId) {
@@ -527,13 +875,13 @@
             }
         }
         
-        // حذف کاربر
+        // حذف пользователя
         async function removeUser() {
             const userId = document.getElementById('removeUserId').value;
             const securityAnswer = document.getElementById('removeSecurityAnswer').value;
             
             if (!userId || !securityAnswer) {
-                showMessage('لطفاً فیل드های اجباری را پر کنید.', 'error');
+                showMessage('لطفاً فیلدهای اجباری را پر کنید.', 'error');
                 return;
             }
             
@@ -648,14 +996,14 @@
         }
         
         function hideAllPages() {
-            document.getElementById('checkingPage').classList.add('hidden');
-            document.getElementById('errorPage').classList.add('hidden');
-            document.getElementById('loginPage').classList.add('hidden');
-            document.getElementById('setupPage').classList.add('hidden');
-            document.getElementById('userInfoPage').classList.add('hidden');
-            document.getElementById('adminPanelPage').classList.add('hidden');
-            document.getElementById('addUserForm').classList.add('hidden');
-            document.getElementById('removeUserForm').classList.add('hidden');
+            const pages = [
+                'checkingPage', 'errorPage', 'loginPage', 'setupPage', 
+                'userInfoPage', 'adminPanelPage', 'addUserForm', 'removeUserForm'
+            ];
+            
+            pages.forEach(page => {
+                document.getElementById(page).classList.add('hidden');
+            });
         }
         
         function showLoading() {
@@ -667,9 +1015,16 @@
         }
         
         function showMessage(message, type) {
-            const messageDiv = document.getElementById('message');
+            // ایجاد المان برای نمایش پیام اگر وجود ندارد
+            let messageDiv = document.getElementById('message');
+            if (!messageDiv) {
+                messageDiv = document.createElement('div');
+                messageDiv.id = 'message';
+                document.querySelector('.main-content').appendChild(messageDiv);
+            }
+            
             messageDiv.textContent = message;
-            messageDiv.className = type;
+            messageDiv.className = `alert alert-${type}`;
             messageDiv.classList.remove('hidden');
             
             setTimeout(() => {
