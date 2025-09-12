@@ -1,1 +1,361 @@
-
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>پنل مدیریت رنک‌ها</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2ecc71;
+            --danger-color: #e74c3c;
+            --dark-color: #2c3e50;
+            --light-color: #ecf0f1;
+            --gray-color: #95a5a6;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f8fa;
+            color: var(--dark-color);
+            line-height: 1.6;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .container {
+            max-width: 100%;
+            padding: 15px;
+            margin: 0 auto;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary-color), #2980b9);
+            color: white;
+            padding: 20px 15px;
+            text-align: center;
+            border-radius: 0 0 15px 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        
+        h1 {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+        }
+        
+        .user-info {
+            background-color: white;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .info-row:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .info-label {
+            font-weight: bold;
+            color: var(--dark-color);
+        }
+        
+        .info-value {
+            color: var(--primary-color);
+        }
+        
+        .section {
+            background-color: white;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .section-title {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            color: var(--dark-color);
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--primary-color);
+        }
+        
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s ease;
+            margin-bottom: 10px;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .btn-secondary {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+        
+        .btn-danger {
+            background-color: var(--danger-color);
+            color: white;
+        }
+        
+        .btn:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .message {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .warning {
+            background-color: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+        
+        .back-btn {
+            background-color: var(--gray-color);
+            color: white;
+            margin-top: 15px;
+        }
+        
+        .login-form {
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .setup-form {
+            max-width: 400px;
+            margin: 30px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .admin-panel {
+            display: none;
+        }
+        
+        .user-panel {
+            display: none;
+        }
+        
+        .loader {
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid var(--primary-color);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: var(--gray-color);
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <div id="loader" class="loader"></div>
+        
+        <div id="login-page" class="hidden">
+            <div class="login-form">
+                <h2>🔐 ورود به پنل مدیریت</h2>
+                <div class="form-group">
+                    <label for="password">رمز عبور:</label>
+                    <input type="password" id="password" placeholder="رمز عبور خود را وارد کنید">
+                </div>
+                <button class="btn btn-primary" onclick="login()">ورود</button>
+                <div id="login-message"></div>
+            </div>
+        </div>
+        
+        <div id="setup-page" class="hidden">
+            <div class="setup-form">
+                <h2>🔒 تنظیم رمز عبور</h2>
+                <p>برای امنیت بیشتر، لطفاً رمز عبور و سوال امنیتی خود را تنظیم کنید.</p>
+                <div class="form-group">
+                    <label for="new-password">رمز عبور جدید:</label>
+                    <input type="password" id="new-password" placeholder="رمز عبور جدید">
+                </div>
+                <div class="form-group">
+                    <label for="confirm-password">تکرار رمز عبور:</label>
+                    <input type="password" id="confirm-password" placeholder="تکرار رمز عبور">
+                </div>
+                <div class="form-group">
+                    <label for="security-question">سوال امنیتی:</label>
+                    <input type="text" id="security-question" placeholder="مثلاً: نام اولین معلم شما؟">
+                </div>
+                <div class="form-group">
+                    <label for="security-answer">پاسخ سوال امنیتی:</label>
+                    <input type="text" id="security-answer" placeholder="پاسخ سوال امنیتی">
+                </div>
+                <button class="btn btn-primary" onclick="setupPassword()">ثبت اطلاعات</button>
+                <div id="setup-message"></div>
+            </div>
+        </div>
+        
+        <div id="main-page" class="hidden">
+            <header>
+                <h1>پنل مدیریت رنک‌ها</h1>
+                <p id="welcome-message">خوش آمدید!</p>
+            </header>
+            
+            <div class="container">
+                <div id="user-panel" class="user-panel">
+                    <div class="user-info">
+                        <h2>👤 اطلاعات کاربری</h2>
+                        <div class="info-row">
+                            <span class="info-label">رنک:</span>
+                            <span class="info-value" id="user-rank"></span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">نام گیم:</span>
+                            <span class="info-value" id="user-game-name"></span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">آیدی عددی:</span>
+                            <span class="info-value" id="user-id"></span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">رفرال:</span>
+                            <span class="info-value" id="user-referral"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="message warning">
+                        <p>بزودی پنل های مربوطه برای شما هم در دسترس قرار میگیرد.</p>
+                    </div>
+                </div>
+                
+                <div id="admin-panel" class="admin-panel">
+                    <div class="section">
+                        <h2 class="section-title">مدیریت کاربران</h2>
+                        <button class="btn btn-primary" onclick="showAddUserForm()">➕ افزودن کاربر</button>
+                        <button class="btn btn-danger" onclick="showRemoveUserForm()">➖ حذف کاربر</button>
+                    </div>
+                    
+                    <div id="add-user-form" class="section hidden">
+                        <h2 class="section-title">افزودن کاربر جدید</h2>
+                        <div class="form-group">
+                            <label for="new-user-id">آیدی عددی کاربر:</label>
+                            <input type="number" id="new-user-id" placeholder="آیدی عددی کاربر">
+                        </div>
+                        <div class="form-group">
+                            <label for="new-game-name">نام گیم (اختیاری):</label>
+                            <input type="text" id="new-game-name" placeholder="نام گیم کاربر">
+                        </div>
+                        <div class="form-group">
+                            <label for="new-referral">رفرال (اختیاری):</label>
+                            <input type="text" id="new-referral" placeholder="رفرال کاربر">
+                        </div>
+                        <div class="form-group">
+                            <label for="new-user-rank">رنک کاربر:</label>
+                            <select id="new-user-rank"></select>
+                        </div>
+                        <div class="form-group">
+                            <label for="admin-security-answer-add">پاسخ سوال امنیتی:</label>
+                            <input type="text" id="admin-security-answer-add" placeholder="پاسخ سوال امنیتی خود را وارد کنید">
+                        </div>
+                        <button class="btn btn-secondary" onclick="addUser()">ثبت کاربر</button>
+                        <button class="btn back-btn" onclick="hideAddUserForm()">بازگشت</button>
+                        <div id="add-user-message"></div>
+                    </div>
+                    
+                    <div id="remove-user-form" class="section hidden">
+                        <h2 class="section-title">حذف کاربر</h2>
+                        <div class="form-group">
+                            <label for="remove-user-id">آیدی عددی کاربر:</label>
+                            <input type="number" id="remove-user-id" placeholder="آیدی عددی کاربر">
+                        </div>
+                        <div class="form-group">
+                            <label for="remove-game-name">نام گیم (اختیاری):</label>
+                            <input type="text" id="remove-game-name" placeholder="نام گیم کاربر">
+                        </div>
+                        <div class="form-group">
+                            <label for="remove-referral">رفرال (اختیاری):</label>
+                            <input type="text" id="remove-referral" placeholder="رفرال کاربر">
+                        </div>
+                        <div class="form-group">
+                            <label for="admin-security-answer-remove">پاسخ سوال امنیتی:</label>
+                            <input type="text" id="admin-security-answer-remove" placeholder="پاسخ سوال امنیتی خود را وارد کنید
