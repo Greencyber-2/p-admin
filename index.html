@@ -335,7 +335,7 @@
                     <label for="removeSecurityAnswer">پاسخ سوال امنیتی:</label>
                     <input type="text" id="removeSecurityAnswer" placeholder="پاسخ سوال امنیتی خود را وارد کنید" />
                 </div>
-                <button class="btn btn-danger" onclick="removeUser()">حذف کاربر</button>
+                <button class="btn btn-danger" onclick="removeUser()">حذف пользователя</button>
                 <button class="btn" onclick="hideRemoveUserForm()">بازگشت</button>
             </div>
             
@@ -353,16 +353,6 @@
         let tg = null;
         let currentUser = null;
         let adminUser = null;
-        
-        // لیست سوالات امنیتی
-        const securityQuestions = [
-            "نام اولین معلم شما؟",
-            "نام اولین حیوان خانگی شما؟",
-            "شهر تولد شما؟",
-            "نام بهترین دوست دوران کودکی شما؟",
-            "مدل اولین ماشین شما؟",
-            "نام مدرسه ابتدایی شما؟"
-        ];
         
         // مقداردهی اولیه
         document.addEventListener('DOMContentLoaded', function() {
@@ -452,11 +442,9 @@
                 const result = await response.json();
                 
                 if (response.ok) {
-                    currentUser = result.user;
+                    adminUser = result.user;
                     
-                    // بررسی رنک کاربر
-                    if (result.user.rank === 'admin' || result.user.rank === 'owner') {
-                        adminUser = result.user;
+                    if (['Developer', 'CC Manager', 'CC Director', 'CC Warden'].includes(adminUser.rank)) {
                         showAdminPanel();
                     } else {
                         showUserInfo();
@@ -477,13 +465,8 @@
             const securityQuestion = document.getElementById('setupSecurityQuestion').value;
             const securityAnswer = document.getElementById('securityAnswer').value;
             
-            if (!newPassword) {
-                showMessage('لطفاً رمز عبور جدید را وارد کنید.', 'error');
-                return;
-            }
-            
-            if (!securityQuestion || !securityAnswer) {
-                showMessage('لطفاً سوال امنیتی و پاسخ آن را انتخاب کنید.', 'error');
+            if (!newPassword || !securityQuestion || !securityAnswer) {
+                showMessage('لطفاً تمام فیلدها را پر کنید.', 'error');
                 return;
             }
             
@@ -502,20 +485,20 @@
                     })
                 });
                 
-                const result = await response.json();
-                
                 if (response.ok) {
                     showMessage('رمز عبور و سوال امنیتی با موفقیت تنظیم شد.', 'success');
                     
-                    // بررسی رنک کاربر
-                    if (currentUser.rank === 'admin' || currentUser.rank === 'owner') {
-                        adminUser = currentUser;
-                        setTimeout(() => showAdminPanel(), 2000);
-                    } else {
-                        setTimeout(() => showUserInfo(), 2000);
-                    }
+                    // بعد از تنظیم رمز، وضعیت کاربر را بررسی کن
+                    setTimeout(() => {
+                        if (['Developer', 'CC Manager', 'CC Director', 'CC Warden'].includes(currentUser.rank)) {
+                            showAdminPanel();
+                        } else {
+                            showUserInfo();
+                        }
+                    }, 2000);
                 } else {
-                    showMessage(result.error || 'خطا در تنظیم رمز عبور', 'error');
+                    const error = await response.json();
+                    showMessage(error.error || 'خطا در تنظیم رمز عبور', 'error');
                 }
             } catch (error) {
                 showMessage('خطا در ارتباط با سرور: ' + error.message, 'error');
@@ -533,13 +516,8 @@
             const securityQuestion = document.getElementById('addSecurityQuestion').value;
             const securityAnswer = document.getElementById('addSecurityAnswer').value;
             
-            if (!userId || !gameName || !referral || !rank) {
-                showMessage('لطفاً تمام فیلدهای ضروری را پر کنید.', 'error');
-                return;
-            }
-            
-            if (!securityQuestion || !securityAnswer) {
-                showMessage('لطفاً سوال امنیتی و پاسخ آن را انتخاب کنید.', 'error');
+            if (!userId || !rank || !securityQuestion || !securityAnswer) {
+                showMessage('لطفاً فیلدهای اجباری را پر کنید.', 'error');
                 return;
             }
             
@@ -551,22 +529,22 @@
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
+                        admin_id: adminUser.user_id,
+                        security_question: securityQuestion,
+                        security_answer: securityAnswer,
                         user_id: parseInt(userId),
                         game_name: gameName,
                         referral: referral,
-                        rank: rank,
-                        security_question: securityQuestion,
-                        security_answer: securityAnswer
+                        rank: rank
                     })
                 });
                 
-                const result = await response.json();
-                
                 if (response.ok) {
-                    showMessage('کاربر با موفقیت افزوده شد.', 'success');
-                    setTimeout(() => hideAddUserForm(), 2000);
+                    showMessage('کاربر با موفقیت اضافه شد.', 'success');
+                    hideAddUserForm();
                 } else {
-                    showMessage(result.error || 'خطا در افزودن کاربر', 'error');
+                    const error = await response.json();
+                    showMessage(error.error || 'خطا در افزودن کاربر', 'error');
                 }
             } catch (error) {
                 showMessage('خطا در ارتباط با سرور: ' + error.message, 'error');
@@ -581,13 +559,8 @@
             const securityQuestion = document.getElementById('removeSecurityQuestion').value;
             const securityAnswer = document.getElementById('removeSecurityAnswer').value;
             
-            if (!userId) {
-                showMessage('لطفاً ایدی عددی کاربر را وارد کنید.', 'error');
-                return;
-            }
-            
-            if (!securityQuestion || !securityAnswer) {
-                showMessage('لطفاً سوال امنیتی و پاسخ آن را انتخاب کنید.', 'error');
+            if (!userId || !securityQuestion || !securityAnswer) {
+                showMessage('لطفاً فیلدهای اجباری را پر کنید.', 'error');
                 return;
             }
             
@@ -599,19 +572,19 @@
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        user_id: parseInt(userId),
+                        admin_id: adminUser.user_id,
                         security_question: securityQuestion,
-                        security_answer: securityAnswer
+                        security_answer: securityAnswer,
+                        user_id: parseInt(userId)
                     })
                 });
                 
-                const result = await response.json();
-                
                 if (response.ok) {
                     showMessage('کاربر با موفقیت حذف شد.', 'success');
-                    setTimeout(() => hideRemoveUserForm(), 2000);
+                    hideRemoveUserForm();
                 } else {
-                    showMessage(result.error || 'خطا در حذف کاربر', 'error');
+                    const error = await response.json();
+                    showMessage(error.error || 'خطا در حذف کاربر', 'error');
                 }
             } catch (error) {
                 showMessage('خطا در ارتباط با سرور: ' + error.message, 'error');
@@ -620,53 +593,29 @@
             }
         }
         
-        // نمایش فرم افزودن کاربر
-        function showAddUserForm() {
-            document.getElementById('adminPanelPage').classList.add('hidden');
-            document.getElementById('addUserForm').classList.remove('hidden');
-            
-            // پر کردن لیست رنک‌ها
-            const rankSelect = document.getElementById('addRank');
-            rankSelect.innerHTML = '';
-            
-            const ranks = ['user', 'vip', 'admin', 'owner'];
-            ranks.forEach(rank => {
-                const option = document.createElement('option');
-                option.value = rank;
-                option.textContent = rank;
-                rankSelect.appendChild(option);
-            });
+        // دریافت لیست رنک‌های قابل اختصاص
+        async function loadAssignableRanks() {
+            try {
+                const response = await fetch(`${API_BASE}/api/assignable-ranks?admin_id=${adminUser.user_id}`);
+                
+                if (response.ok) {
+                    const ranks = await response.json();
+                    const rankSelect = document.getElementById('addRank');
+                    
+                    rankSelect.innerHTML = '';
+                    ranks.forEach(rank => {
+                        const option = document.createElement('option');
+                        option.value = rank;
+                        option.textContent = rank;
+                        rankSelect.appendChild(option);
+                    });
+                }
+            } catch (error) {
+                console.error('Error loading ranks:', error);
+            }
         }
         
-        // پنهان کردن فرم افزودن کاربر
-        function hideAddUserForm() {
-            document.getElementById('addUserForm').classList.add('hidden');
-            document.getElementById('adminPanelPage').classList.remove('hidden');
-            
-            // پاک کردن فیلدها
-            document.getElementById('addUserId').value = '';
-            document.getElementById('addGameName').value = '';
-            document.getElementById('addReferral').value = '';
-            document.getElementById('addSecurityAnswer').value = '';
-        }
-        
-        // نمایش فرم حذف کاربر
-        function showRemoveUserForm() {
-            document.getElementById('adminPanelPage').classList.add('hidden');
-            document.getElementById('removeUserForm').classList.remove('hidden');
-        }
-        
-        // پنهان کردن فرم حذف کاربر
-        function hideRemoveUserForm() {
-            document.getElementById('removeUserForm').classList.add('hidden');
-            document.getElementById('adminPanelPage').classList.remove('hidden');
-            
-            // پاک کردن فیلدها
-            document.getElementById('removeUserId').value = '';
-            document.getElementById('removeSecurityAnswer').value = '';
-        }
-        
-        // نمایش صفحات مختلف
+        // توابع نمایش/پنهان کردن صفحات
         function showLoginPage() {
             hideAllPages();
             document.getElementById('loginPage').classList.remove('hidden');
@@ -683,18 +632,37 @@
             document.getElementById('userInfoPage').classList.remove('hidden');
             
             document.getElementById('userRank').textContent = currentUser.rank;
-            document.getElementById('userGameName').textContent = currentUser.game_name;
+            document.getElementById('userGameName').textContent = currentUser.game_name || 'تعریف نشده';
             document.getElementById('userUserId').textContent = currentUser.user_id;
-            document.getElementById('userReferral').textContent = currentUser.referral;
+            document.getElementById('userReferral').textContent = currentUser.referral || 'تعریف نشده';
         }
         
         function showAdminPanel() {
             hideAllPages();
             document.getElementById('adminPanelPage').classList.remove('hidden');
             
-            document.getElementById('adminName').textContent = currentUser.game_name;
-            document.getElementById('adminRank').textContent = currentUser.rank;
-            document.getElementById('adminUserId').textContent = currentUser.user_id;
+            document.getElementById('adminName').textContent = adminUser.game_name || adminUser.user_id;
+            document.getElementById('adminRank').textContent = adminUser.rank;
+            document.getElementById('adminUserId').textContent = adminUser.user_id;
+        }
+        
+        function showAddUserForm() {
+            hideAllPages();
+            document.getElementById('addUserForm').classList.remove('hidden');
+            loadAssignableRanks();
+        }
+        
+        function hideAddUserForm() {
+            showAdminPanel();
+        }
+        
+        function showRemoveUserForm() {
+            hideAllPages();
+            document.getElementById('removeUserForm').classList.remove('hidden');
+        }
+        
+        function hideRemoveUserForm() {
+            showAdminPanel();
         }
         
         function showError(message) {
@@ -704,14 +672,14 @@
         }
         
         function hideAllPages() {
-            const pages = [
-                'checkingPage', 'errorPage', 'loginPage', 'setupPage',
-                'userInfoPage', 'adminPanelPage', 'addUserForm', 'removeUserForm'
-            ];
-            
-            pages.forEach(page => {
-                document.getElementById(page).classList.add('hidden');
-            });
+            document.getElementById('checkingPage').classList.add('hidden');
+            document.getElementById('errorPage').classList.add('hidden');
+            document.getElementById('loginPage').classList.add('hidden');
+            document.getElementById('setupPage').classList.add('hidden');
+            document.getElementById('userInfoPage').classList.add('hidden');
+            document.getElementById('adminPanelPage').classList.add('hidden');
+            document.getElementById('addUserForm').classList.add('hidden');
+            document.getElementById('removeUserForm').classList.add('hidden');
         }
         
         function showLoading() {
