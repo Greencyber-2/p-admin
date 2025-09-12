@@ -358,4 +358,386 @@
                         </div>
                         <div class="form-group">
                             <label for="admin-security-answer-remove">پاسخ سوال امنیتی:</label>
-                            <input type="text" id="admin-security-answer-remove" placeholder="پاسخ سوال امنیتی خود را وارد کنید
+                            <input type="text" id="admin-security-answer-remove" placeholder="پاسخ سوال امنیتی خود را وارد کنید">
+                        </div>
+                        <button class="btn btn-danger" onclick="removeUser()">حذف کاربر</button>
+                        <button class="btn back-btn" onclick="hideRemoveUserForm()">بازگشت</button>
+                        <div id="remove-user-message"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>این نسخه بتا است و به زودی تکمیل خواهد شد.</p>
+        </footer>
+    </div>
+
+    <script>
+        const Telegram = window.Telegram.WebApp;
+        const API_BASE = 'https://p-admin.hupadr.workers.dev';
+        
+        let userData = null;
+        let assignableRanks = [];
+        
+        // مقداردهی اولیه برنامه
+        Telegram.expand();
+        Telegram.enableClosingConfirmation();
+        Telegram.BackButton.onClick(goBack);
+        
+        // بررسی وضعیت کاربر هنگام بارگذاری
+        window.onload = async function() {
+            try {
+                // دریافت داده‌های اولیه از تلگرام
+                const initData = Telegram.initData;
+                const initDataUnsafe = Telegram.initDataUnsafe;
+                
+                if (!initDataUnsafe || !initDataUnsafe.user) {
+                    showMessage('login-message', 'خطا در دریافت اطلاعات کاربر. لطفاً دوباره از طریق ربات تلگرام وارد شوید.', 'error');
+                    return;
+                }
+                
+                const userId = initDataUnsafe.user.id;
+                
+                // دریافت اطلاعات کاربر از سرور
+                const response = await fetch(`${API_BASE}/api/user?user_id=${userId}`);
+                const data = await response.json();
+                
+                if (response.status === 404) {
+                    showMessage('login-message', 'شما در سیستم ثبت نشده‌اید. لطفاً با ادمین تماس بگیرید.', 'error');
+                    return;
+                }
+                
+                if (!response.ok) {
+                    throw new Error(data.error || 'خطا در دریافت اطلاعات کاربر');
+                }
+                
+                userData = data;
+                
+                // بررسی اینکه کاربر رمز عبور دارد یا نه
+                if (!userData.password) {
+                    showSetupPage();
+                } else {
+                    showLoginPage();
+                }
+                
+            } catch (error) {
+                console.error('Error initializing app:', error);
+                showMessage('login-message', 'خطا در ارتباط با سرور. لطفاً دوباره تلاش کنید.', 'error');
+            } finally {
+                document.getElementById('loader').classList.add('hidden');
+            }
+        };
+        
+        // نمایش صفحه لاگین
+        function showLoginPage() {
+            document.getElementById('loader').classList.add('hidden');
+            document.getElementById('login-page').classList.remove('hidden');
+            document.getElementById('main-page').classList.add('hidden');
+            document.getElementById('setup-page').classList.add('hidden');
+        }
+        
+        // نمایش صفحه تنظیم رمز عبور
+        function showSetupPage() {
+            document.getElementById('loader').classList.add('hidden');
+            document.getElementById('setup-page').classList.remove('hidden');
+            document.getElementById('login-page').classList.add('hidden');
+            document.getElementById('main-page').classList.add('hidden');
+        }
+        
+        // نمایش صفحه اصلی
+        function showMainPage() {
+            document.getElementById('loader').classList.add('hidden');
+            document.getElementById('main-page').classList.remove('hidden');
+            document.getElementById('login-page').classList.add('hidden');
+            document.getElementById('setup-page').classList.add('hidden');
+            
+            // پر کردن اطلاعات کاربری
+            document.getElementById('user-rank').textContent = userData.rank;
+            document.getElementById('user-game-name').textContent = userData.game_name || 'ثبت نشده';
+            document.getElementById('user-id').textContent = userData.user_id;
+            document.getElementById('user-referral').textContent = userData.referral || 'ثبت نشده';
+            document.getElementById('welcome-message').textContent = `خوش آمدید ${userData.game_name || 'کاربر'}!`;
+            
+            // نمایش پنل مناسب بر اساس رنک کاربر
+            if (['Developer', 'CC Manager', 'CC Director', 'CC Warden'].includes(userData.rank)) {
+                document.getElementById('admin-panel').classList.remove('hidden');
+                document.getElementById('user-panel').classList.add('hidden');
+                loadAssignableRanks();
+            } else {
+                document.getElementById('admin-panel').classList.add('hidden');
+                document.getElementById('user-panel').classList.remove('hidden');
+            }
+        }
+        
+        // لاگین کاربر
+        async function login() {
+            const password = document.getElementById('password').value;
+            
+            if (!password) {
+                showMessage('login-message', 'لطفاً رمز عبور خود را وارد کنید.', 'error');
+                return;
+            }
+            
+            try {
+                document.getElementById('loader').classList.remove('hidden');
+                
+                const response = await fetch(`${API_BASE}/api/auth`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        user_id: userData.user_id,
+                        password: password
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showMainPage();
+                } else {
+                    showMessage('login-message', data.error || 'رمز عبور نامعتبر است.', 'error');
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                showMessage('login-message', 'خطا در ارتباط با سرور. لطفاً دوباره تلاش کنید.', 'error');
+            } finally {
+                document.getElementById('loader').classList.add('hidden');
+            }
+        }
+        
+        // تنظیم رمز عبور
+        async function setupPassword() {
+            const newPassword = document.getElementById('new-password').value;
+            const confirmPassword = document.getElementById('confirm-password').value;
+            const securityQuestion = document.getElementById('security-question').value;
+            const securityAnswer = document.getElementById('security-answer').value;
+            
+            if (!newPassword || !confirmPassword || !securityQuestion || !securityAnswer) {
+                showMessage('setup-message', 'لطفاً تمام فیلدها را پر کنید.', 'error');
+                return;
+            }
+            
+            if (newPassword !== confirmPassword) {
+                showMessage('setup-message', 'رمز عبور و تکرار آن مطابقت ندارند.', 'error');
+                return;
+            }
+            
+            try {
+                document.getElementById('loader').classList.remove('hidden');
+                
+                const response = await fetch(`${API_BASE}/api/setup-password`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        user_id: userData.user_id,
+                        password: newPassword,
+                        security_question: securityQuestion,
+                        security_answer: securityAnswer
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showMessage('setup-message', 'اطلاعات با موفقیت ثبت شد. اکنون می‌توانید وارد شوید.', 'success');
+                    setTimeout(() => {
+                        showLoginPage();
+                    }, 2000);
+                } else {
+                    showMessage('setup-message', data.error || 'خطا در ثبت اطلاعات.', 'error');
+                }
+            } catch (error) {
+                console.error('Setup password error:', error);
+                showMessage('setup-message', 'خطا در ارتباط با سرور. لطفاً دوباره تلاش کنید.', 'error');
+            } finally {
+                document.getElementById('loader').classList.add('hidden');
+            }
+        }
+        
+        // بارگیری رنک‌های قابل اختصاص
+        async function loadAssignableRanks() {
+            try {
+                const response = await fetch(`${API_BASE}/api/assignable-ranks?admin_id=${userData.user_id}`);
+                
+                if (response.ok) {
+                    assignableRanks = await response.json();
+                    
+                    // پر کردن dropdown رنک‌ها
+                    const rankSelect = document.getElementById('new-user-rank');
+                    rankSelect.innerHTML = '';
+                    
+                    assignableRanks.forEach(rank => {
+                        const option = document.createElement('option');
+                        option.value = rank;
+                        option.textContent = rank;
+                        rankSelect.appendChild(option);
+                    });
+                } else {
+                    console.error('Failed to load assignable ranks');
+                }
+            } catch (error) {
+                console.error('Error loading assignable ranks:', error);
+            }
+        }
+        
+        // نمایش فرم افزودن کاربر
+        function showAddUserForm() {
+            document.getElementById('add-user-form').classList.remove('hidden');
+            document.getElementById('remove-user-form').classList.add('hidden');
+            Telegram.BackButton.show();
+        }
+        
+        // پنهان کردن فرم افزودن کاربر
+        function hideAddUserForm() {
+            document.getElementById('add-user-form').classList.add('hidden');
+            Telegram.BackButton.hide();
+        }
+        
+        // نمایش فرم حذف کاربر
+        function showRemoveUserForm() {
+            document.getElementById('remove-user-form').classList.remove('hidden');
+            document.getElementById('add-user-form').classList.add('hidden');
+            Telegram.BackButton.show();
+        }
+        
+        // پنهان کردن فرم حذف کاربر
+        function hideRemoveUserForm() {
+            document.getElementById('remove-user-form').classList.add('hidden');
+            Telegram.BackButton.hide();
+        }
+        
+        // اضافه کردن کاربر
+        async function addUser() {
+            const userId = document.getElementById('new-user-id').value;
+            const gameName = document.getElementById('new-game-name').value;
+            const referral = document.getElementById('new-referral').value;
+            const rank = document.getElementById('new-user-rank').value;
+            const securityAnswer = document.getElementById('admin-security-answer-add').value;
+            
+            if (!userId || !rank || !securityAnswer) {
+                showMessage('add-user-message', 'لطفاً فیلدهای اجباری را پر کنید.', 'error');
+                return;
+            }
+            
+            try {
+                document.getElementById('loader').classList.remove('hidden');
+                
+                const response = await fetch(`${API_BASE}/api/add-user`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        admin_id: userData.user_id,
+                        security_answer: securityAnswer,
+                        user_id: parseInt(userId),
+                        game_name: gameName,
+                        referral: referral,
+                        rank: rank
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showMessage('add-user-message', 'کاربر با موفقیت اضافه شد.', 'success');
+                    
+                    // پاک کردن فرم
+                    document.getElementById('new-user-id').value = '';
+                    document.getElementById('new-game-name').value = '';
+                    document.getElementById('new-referral').value = '';
+                    document.getElementById('admin-security-answer-add').value = '';
+                } else {
+                    showMessage('add-user-message', data.error || 'خطا در اضافه کردن کاربر.', 'error');
+                }
+            } catch (error) {
+                console.error('Add user error:', error);
+                showMessage('add-user-message', 'خطا در ارتباط با سرور. لطفاً دوباره تلاش کنید.', 'error');
+            } finally {
+                document.getElementById('loader').classList.add('hidden');
+            }
+        }
+        
+        // حذف کاربر
+        async function removeUser() {
+            const userId = document.getElementById('remove-user-id').value;
+            const gameName = document.getElementById('remove-game-name').value;
+            const referral = document.getElementById('remove-referral').value;
+            const securityAnswer = document.getElementById('admin-security-answer-remove').value;
+            
+            if (!userId || !securityAnswer) {
+                showMessage('remove-user-message', 'لطفاً فیلدهای اجباری را پر کنید.', 'error');
+                return;
+            }
+            
+            try {
+                document.getElementById('loader').classList.remove('hidden');
+                
+                const response = await fetch(`${API_BASE}/api/remove-user`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        admin_id: userData.user_id,
+                        security_answer: securityAnswer,
+                        user_id: parseInt(userId),
+                        game_name: gameName,
+                        referral: referral
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showMessage('remove-user-message', 'کاربر با موفقیت حذف شد.', 'success');
+                    
+                    // پاک کردن فرم
+                    document.getElementById('remove-user-id').value = '';
+                    document.getElementById('remove-game-name').value = '';
+                    document.getElementById('remove-referral').value = '';
+                    document.getElementById('admin-security-answer-remove').value = '';
+                } else {
+                    showMessage('remove-user-message', data.error || 'خطا در حذف کاربر.', 'error');
+                }
+            } catch (error) {
+                console.error('Remove user error:', error);
+                showMessage('remove-user-message', 'خطا در ارتباط با سرور. لطفاً دوباره تلاش کنید.', 'error');
+            } finally {
+                document.getElementById('loader').classList.add('hidden');
+            }
+        }
+        
+        // نمایش پیام
+        function showMessage(elementId, message, type) {
+            const messageElement = document.getElementById(elementId);
+            messageElement.textContent = message;
+            messageElement.className = 'message';
+            
+            if (type === 'success') {
+                messageElement.classList.add('success');
+            } else if (type === 'error') {
+                messageElement.classList.add('error');
+            } else if (type === 'warning') {
+                messageElement.classList.add('warning');
+            }
+            
+            messageElement.classList.remove('hidden');
+        }
+        
+        // عملکرد دکمه بازگشت
+        function goBack() {
+            if (!document.getElementById('add-user-form').classList.contains('hidden')) {
+                hideAddUserForm();
+            } else if (!document.getElementById('remove-user-form').classList.contains('hidden')) {
+                hideRemoveUserForm();
+            }
+        }
+    </script>
+</body>
+</html>
