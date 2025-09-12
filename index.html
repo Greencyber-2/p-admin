@@ -5,1024 +5,689 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>پنل مدیریت ادمین‌ها</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <style>
         :root {
-            --primary: #4361ee;
-            --secondary: #7209b7;
-            --success: #06d6a0;
-            --danger: #ef476f;
-            --warning: #ffd166;
-            --info: #118ab2;
-            --light: #f8f9fa;
-            --dark: #212529;
-            --background: #ffffff;
-            --surface: #f8f9fa;
-            --text: #212529;
-            --border: #dee2e6;
-            --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            --primary: #4f46e5;
+            --primary-dark: #4338ca;
+            --secondary: #10b981;
+            --secondary-dark: #059669;
+            --danger: #ef4444;
+            --danger-dark: #dc2626;
+            --warning: #f59e0b;
+            --warning-dark: #d97706;
+            --background: #f8fafc;
+            --surface: #ffffff;
+            --on-primary: #ffffff;
+            --on-secondary: #ffffff;
+            --on-danger: #ffffff;
+            --on-warning: #ffffff;
+            --on-background: #1e293b;
+            --on-surface: #1e293b;
+            --outline: #e2e8f0;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --radius: 12px;
             --transition: all 0.3s ease;
+            --animation-duration: 0.3s;
         }
 
-        .dark-mode {
-            --background: #121212;
-            --surface: #1e1e1e;
-            --text: #e6e6e6;
-            --border: #2d2d2d;
-            --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        [data-theme="dark"] {
+            --background: #0f172a;
+            --surface: #1e293b;
+            --on-background: #f1f5f9;
+            --on-surface: #f1f5f9;
+            --outline: #334155;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Vazirmatn', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            transition: var(--transition);
-        }
-        
-        body {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            min-height: 100vh;
-            padding: 20px;
-            color: var(--text);
-            background-color: var(--background);
-        }
-        
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            background: var(--surface);
-            border-radius: 20px;
-            box-shadow: var(--card-shadow);
-            overflow: hidden;
-        }
-        
-        .header {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--info) 100%);
-            color: white;
-            padding: 25px;
-            text-align: center;
-            position: relative;
-        }
-        
-        .header h1 {
-            font-size: 28px;
-            margin-bottom: 10px;
-            font-weight: 700;
         }
 
-        .header p {
-            font-size: 16px;
-            opacity: 0.9;
+        body {
+            background-color: var(--background);
+            color: var(--on-background);
+            font-family: 'Vazirmatn', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            transition: var(--transition);
+            line-height: 1.6;
+            padding: 0;
+            margin: 0;
+        }
+
+        .app-container {
+            max-width: 100%;
+            min-height: 100vh;
+            margin: 0 auto;
+            background-color: var(--background);
+            transition: var(--transition);
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: var(--on-primary);
+            padding: 1.2rem 1.5rem;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-title {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .header-title h1 {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
         }
 
         .theme-toggle {
-            position: absolute;
-            top: 20px;
-            left: 20px;
             background: rgba(255, 255, 255, 0.2);
             border: none;
-            width: 50px;
-            height: 50px;
             border-radius: 50%;
-            cursor: pointer;
+            width: 2.5rem;
+            height: 2.5rem;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
-            font-size: 20px;
+            cursor: pointer;
+            color: var(--on-primary);
+            transition: var(--transition);
         }
 
         .theme-toggle:hover {
             background: rgba(255, 255, 255, 0.3);
-            transform: rotate(30deg);
         }
-        
+
         .content {
-            padding: 25px;
+            padding: 1.5rem;
+            max-width: 800px;
+            margin: 0 auto;
+            width: 100%;
         }
-        
-        .section {
-            margin-bottom: 30px;
-            padding: 25px;
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            background: var(--surface);
-            box-shadow: var(--card-shadow);
+
+        .card {
+            background-color: var(--surface);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: var(--transition);
+            border: 1px solid var(--outline);
         }
-        
-        .section h2 {
-            color: var(--primary);
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid var(--primary);
-            font-size: 22px;
+
+        .card-header {
             display: flex;
             align-items: center;
-            gap: 10px;
-        }
-        
-        .form-group {
-            margin-bottom: 20px;
-            position: relative;
-        }
-        
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: var(--text);
-            font-size: 15px;
-        }
-        
-        .form-group input,
-        .form-group select,
-        .form-group textarea {
-            width: 100%;
-            padding: 14px 16px;
-            border: 2px solid var(--border);
-            border-radius: 12px;
-            font-size: 16px;
-            background: var(--background);
-            color: var(--text);
-        }
-        
-        .form-group input:focus,
-        .form-group select:focus,
-        .form-group textarea:focus {
-            border-color: var(--primary);
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+            gap: 0.75rem;
+            margin-bottom: 1.25rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid var(--outline);
         }
 
-        .form-group i {
-            position: absolute;
-            left: 15px;
-            top: 43px;
+        .card-header h2 {
+            font-size: 1.125rem;
+            font-weight: 600;
             color: var(--primary);
         }
 
-        .form-group.with-icon input {
-            padding-left: 45px;
+        .form-group {
+            margin-bottom: 1.25rem;
         }
-        
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--on-surface);
+        }
+
+        .form-input, .form-select, .form-textarea {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            border: 1px solid var(--outline);
+            border-radius: 0.75rem;
+            background-color: var(--surface);
+            color: var(--on-surface);
+            font-family: inherit;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+        }
+
         .btn {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--info) 100%);
-            color: white;
-            border: none;
-            padding: 14px 28px;
-            border-radius: 12px;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: 600;
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
-            box-shadow: 0 4px 12px rgba(67, 97, 238, 0.25);
-        }
-        
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(67, 97, 238, 0.35);
-        }
-        
-        .btn-danger {
-            background: linear-gradient(135deg, var(--danger) 0%, #ff6b6b 100%);
-            box-shadow: 0 4px 12px rgba(239, 71, 111, 0.25);
+            gap: 0.5rem;
+            padding: 0.875rem 1.5rem;
+            border: none;
+            border-radius: 0.75rem;
+            font-family: inherit;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
         }
 
-        .btn-danger:hover {
-            box-shadow: 0 6px 16px rgba(239, 71, 111, 0.35);
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: var(--on-primary);
         }
-        
+
+        .btn-primary:hover {
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+            transform: translateY(-2px);
+        }
+
         .btn-success {
-            background: linear-gradient(135deg, var(--success) 0%, #4cd964 100%);
-            box-shadow: 0 4px 12px rgba(6, 214, 160, 0.25);
+            background: linear-gradient(135deg, var(--secondary) 0%, var(--secondary-dark) 100%);
+            color: var(--on-secondary);
         }
 
         .btn-success:hover {
-            box-shadow: 0 6px 16px rgba(6, 214, 160, 0.35);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, var(--danger) 0%, var(--danger-dark) 100%);
+            color: var(--on-danger);
+        }
+
+        .btn-danger:hover {
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+            transform: translateY(-2px);
         }
 
         .btn-outline {
             background: transparent;
-            border: 2px solid var(--primary);
-            color: var(--primary);
-            box-shadow: none;
+            border: 1px solid var(--outline);
+            color: var(--on-surface);
         }
 
         .btn-outline:hover {
-            background: var(--primary);
-            color: white;
-        }
-        
-        .user-info {
-            background: linear-gradient(135deg, var(--secondary) 0%, var(--primary) 100%);
-            color: white;
-            padding: 20px;
-            border-radius: 16px;
-            margin-bottom: 25px;
-        }
-        
-        .user-info h2 {
-            color: white;
-            border-bottom: 2px solid rgba(255, 255, 255, 0.3);
-            padding-bottom: 12px;
-            margin-bottom: 15px;
+            background-color: rgba(0, 0, 0, 0.05);
         }
 
-        .user-info p {
-            margin: 10px 0;
+        .user-info-card {
+            background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
+            color: white;
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .user-info-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .user-info-item:last-child {
+            border-bottom: none;
+        }
+
+        .user-info-label {
+            font-weight: 500;
+        }
+
+        .user-info-value {
+            font-weight: 600;
+        }
+
+        .admin-panel-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .admin-panel-card {
+            background-color: var(--surface);
+            border-radius: var(--radius);
+            padding: 1.25rem;
+            text-align: center;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            border: 1px solid var(--outline);
+            cursor: pointer;
+        }
+
+        .admin-panel-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+        }
+
+        .admin-panel-icon {
+            font-size: 2rem;
+            margin-bottom: 0.75rem;
+            color: var(--primary);
+        }
+
+        .admin-panel-title {
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+
+        .message {
+            padding: 1rem;
+            border-radius: 0.75rem;
+            margin-bottom: 1rem;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 0.75rem;
         }
 
-        .user-info i {
-            width: 20px;
+        .message-error {
+            background-color: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+            border: 1px solid rgba(239, 68, 68, 0.2);
         }
-        
-        .hidden {
-            display: none;
+
+        .message-success {
+            background-color: rgba(16, 185, 129, 0.1);
+            color: var(--secondary);
+            border: 1px solid rgba(16, 185, 129, 0.2);
         }
-        
+
+        .message-warning {
+            background-color: rgba(245, 158, 11, 0.1);
+            color: var(--warning);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+        }
+
         .loading {
-            text-align: center;
-            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
         }
 
-        .loading .spinner {
-            width: 50px;
-            height: 50px;
-            border: 4px solid rgba(67, 97, 238, 0.2);
+        .loading-spinner {
+            width: 48px;
+            height: 48px;
+            border: 4px solid var(--outline);
+            border-top: 4px solid var(--primary);
             border-radius: 50%;
-            border-top-color: var(--primary);
             animation: spin 1s linear infinite;
-            margin: 0 auto 20px;
+            margin-bottom: 1rem;
         }
 
         @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-        
-        .error {
-            background: rgba(239, 71, 111, 0.1);
-            color: var(--danger);
-            padding: 15px;
-            border-radius: 12px;
-            margin: 15px 0;
-            border: 1px solid rgba(239, 71, 111, 0.2);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .success {
-            background: rgba(6, 214, 160, 0.1);
-            color: var(--success);
-            padding: 15px;
-            border-radius: 12px;
-            margin: 15px 0;
-            border: 1px solid rgba(6, 214, 160, 0.2);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .warning {
-            background: rgba(255, 209, 102, 0.1);
-            color: var(--warning);
-            padding: 15px;
-            border-radius: 12px;
-            margin: 15px 0;
-            border: 1px solid rgba(255, 209, 102, 0.2);
-            display: flex;
-            align-items: center;
-            gap: 10px;
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
-        .action-buttons {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin: 25px 0;
+        .hidden {
+            display: none !important;
         }
 
-        .admin-stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 15px;
-            margin-bottom: 25px;
+        .fade-in {
+            animation: fadeIn var(--animation-duration) ease-in;
         }
 
-        .stat-card {
-            background: var(--background);
-            padding: 20px;
-            border-radius: 12px;
-            text-align: center;
-            box-shadow: var(--card-shadow);
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        .stat-card i {
-            font-size: 28px;
-            color: var(--primary);
-            margin-bottom: 10px;
-        }
-
-        .stat-card h3 {
-            font-size: 24px;
-            margin-bottom: 5px;
-            color: var(--primary);
-        }
-
-        .stat-card p {
-            color: var(--text);
-            opacity: 0.8;
-            font-size: 14px;
-        }
-        
+        /* Responsive styles */
         @media (max-width: 768px) {
-            .container {
-                margin: 10px;
-                border-radius: 16px;
+            .header {
+                padding: 1rem;
             }
             
-            .header h1 {
-                font-size: 22px;
+            .header-title h1 {
+                font-size: 1.125rem;
             }
-
-            .header p {
-                font-size: 14px;
+            
+            .content {
+                padding: 1rem;
+            }
+            
+            .card {
+                padding: 1.25rem;
+            }
+            
+            .admin-panel-grid {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
             }
             
             .btn {
                 width: 100%;
-                margin: 5px 0;
+                margin-bottom: 0.5rem;
             }
-
-            .action-buttons {
-                grid-template-columns: 1fr;
-            }
-
-            .content {
-                padding: 15px;
-            }
-
-            .section {
-                padding: 20px;
+            
+            .btn-group {
+                display: flex;
+                flex-direction: column;
             }
         }
 
-        /* انیمیشن‌های صفحه */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .section {
-            animation: fadeIn 0.5s ease forwards;
-        }
-
-        /* استایل برای حالت دسکتاپ بزرگ */
-        @media (min-width: 1200px) {
-            .container {
-                max-width: 1000px;
+        @media (max-width: 480px) {
+            .header-title h1 {
+                font-size: 1rem;
             }
-        }
-
-        /* استایل برای حالت تبلت */
-        @media (max-width: 992px) {
-            .admin-stats {
-                grid-template-columns: repeat(2, 1fr);
+            
+            .card {
+                padding: 1rem;
             }
-        }
-
-        /* استایل برای حالت موبایل */
-        @media (max-width: 576px) {
-            body {
-                padding: 10px;
-            }
-
-            .admin-stats {
-                grid-template-columns: 1fr;
-            }
-
-            .theme-toggle {
-                top: 15px;
-                left: 15px;
-                width: 40px;
-                height: 40px;
-                font-size: 16px;
-            }
-
-            .header {
-                padding: 20px 15px;
+            
+            .admin-panel-grid {
+                grid-template-columns: 1fr 1fr;
             }
         }
     </style>
 </head>
 <body>
-    <div class="container">
+    <div class="app-container">
         <div class="header">
-            <button class="theme-toggle" id="themeToggle">
-                <i class="fas fa-moon"></i>
-            </button>
-            <h1>🤖 پنل مدیریت ادمین‌ها</h1>
-            <p>سیستم مدیریت دسترسی‌های پلتفرم</p>
+            <div class="header-title">
+                <i class="material-icons">admin_panel_settings</i>
+                <h1>پنل مدیریت ادمین‌ها</h1>
+            </div>
+            <div class="header-actions">
+                <button class="theme-toggle" id="themeToggle">
+                    <i class="material-icons">dark_mode</i>
+                </button>
+            </div>
         </div>
-        
+
         <div class="content">
             <!-- صفحه بررسی وضعیت -->
-            <div id="checkingPage" class="section">
-                <h2><i class="fas fa-search"></i> در حال بررسی دسترسی‌ها</h2>
+            <div id="checkingPage" class="card fade-in">
+                <div class="card-header">
+                    <i class="material-icons">search</i>
+                    <h2>در حال بررسی دسترسی‌ها</h2>
+                </div>
                 <div class="loading">
-                    <div class="spinner"></div>
+                    <div class="loading-spinner"></div>
                     <p>لطفاً منتظر بمانید...</p>
                 </div>
             </div>
             
             <!-- صفحه خطا -->
-            <div id="errorPage" class="section hidden">
-                <h2><i class="fas fa-exclamation-circle"></i> خطا در دسترسی</h2>
-                <div class="error">
-                    <i class="fas fa-exclamation-circle"></i>
+            <div id="errorPage" class="card hidden">
+                <div class="card-header">
+                    <i class="material-icons">error</i>
+                    <h2>خطا در دسترسی</h2>
+                </div>
+                <div class="message message-error">
+                    <i class="material-icons">warning</i>
                     <p id="errorMessage"></p>
                 </div>
             </div>
             
             <!-- صفحه لاگین -->
-            <div id="loginPage" class="section hidden">
-                <h2><i class="fas fa-lock"></i> ورود به سیستم</h2>
-                <div class="form-group with-icon">
-                    <label for="userId">ایدی عددی کاربر:</label>
-                    <i class="fas fa-user"></i>
-                    <input type="number" id="userId" placeholder="مثال: 123456789" readonly />
+            <div id="loginPage" class="card hidden">
+                <div class="card-header">
+                    <i class="material-icons">lock</i>
+                    <h2>ورود به سیستم</h2>
                 </div>
-                <div class="form-group with-icon">
-                    <label for="password">رمز عبور:</label>
-                    <i class="fas fa-key"></i>
-                    <input type="password" id="password" placeholder="رمز عبور خود را وارد کنید" />
+                <div class="form-group">
+                    <label for="userId" class="form-label">ایدی عددی کاربر:</label>
+                    <input type="number" id="userId" class="form-input" placeholder="مثال: 123456789" readonly />
                 </div>
-                <button class="btn" onclick="login()"><i class="fas fa-sign-in-alt"></i> ورود به سیستم</button>
+                <div class="form-group">
+                    <label for="password" class="form-label">رمز عبور:</label>
+                    <input type="password" id="password" class="form-input" placeholder="رمز عبور خود را وارد کنید" />
+                </div>
+                <button class="btn btn-primary" onclick="login()">
+                    <i class="material-icons">login</i>
+                    ورود به سیستم
+                </button>
             </div>
             
             <!-- صفحه تنظیم رمز عبور -->
-            <div id="setupPage" class="section hidden">
-                <h2><i class="fas fa-cog"></i> تنظیم رمز عبور</h2>
-                <div class="form-group with-icon">
-                    <label for="newPassword">رمز عبور جدید:</label>
-                    <i class="fas fa-lock"></i>
-                    <input type="password" id="newPassword" placeholder="رمز عبور جدید را وارد کنید" />
+            <div id="setupPage" class="card hidden">
+                <div class="card-header">
+                    <i class="material-icons">settings</i>
+                    <h2>تنظیم رمز عبور</h2>
                 </div>
                 <div class="form-group">
-                    <label for="setupSecurityQuestion">سوال امنیتی:</label>
-                    <select id="setupSecurityQuestion">
-                        <option value="">-- انتخاب سوال امنیتی --</option>
-                        <option value="نام اولین معلم شما؟">نام اولین معلم شما؟</option>
-                        <option value="نام اولین حیوان خانگی شما؟">نام اولین حیوان خانگی شما؟</option>
-                        <option value="شهر تولد شما؟">شهر تولد شما؟</option>
-                        <option value="نام بهترین دوست دوران کودکی شما؟">نام بهترین دوست دوران کودکی شما؟</option>
-                        <option value="مدل اولین ماشین شما؟">مدل اولین ماشین شما؟</option>
-                        <option value="نام مدرسه ابتدایی شما؟">نام مدرسه ابتدایی شما؟</option>
-                    </select>
+                    <label for="newPassword" class="form-label">رمز عبور جدید:</label>
+                    <input type="password" id="newPassword" class="form-input" placeholder="رمز عبور جدید را وارد کنید" />
                 </div>
-                <div class="form-group with-icon">
-                    <label for="securityAnswer">پاسخ سوال امنیتی:</label>
-                    <i class="fas fa-shield-alt"></i>
-                    <input type="text" id="securityAnswer" placeholder="پاسخ سوال امنیتی را وارد کنید" />
+                <div class="form-group">
+                    <label for="securityQuestion" class="form-label">سوال امنیتی:</label>
+                    <input type="text" id="securityQuestion" class="form-input" placeholder="مثال: نام اولین معلم شما؟" />
                 </div>
-                <button class="btn btn-success" onclick="setupPassword()"><i class="fas fa-save"></i> ذخیره تنظیمات</button>
+                <div class="form-group">
+                    <label for="securityAnswer" class="form-label">پاسخ سوال امنیتی:</label>
+                    <input type="text" id="securityAnswer" class="form-input" placeholder="پاسخ سوال امنیتی را وارد کنید" />
+                </div>
+                <button class="btn btn-success" onclick="setupPassword()">
+                    <i class="material-icons">save</i>
+                    ذخیره تنظیمات
+                </button>
             </div>
             
             <!-- صفحه اطلاعات کاربر -->
-            <div id="userInfoPage" class="section hidden">
-                <div class="user-info">
-                    <h2><i class="fas fa-check-circle"></i> هویت شما تایید شد</h2>
-                    <p><i class="fas fa-crown"></i><strong>رنک شما:</strong> <span id="userRank"></span></p>
-                    <p><i class="fas fa-gamepad"></i><strong>نیم گیم شما:</strong> <span id="userGameName"></span></p>
-                    <p><i class="fas fa-id-card"></i><strong>ایدی عددی شما:</strong> <span id="userUserId"></span></p>
-                    <p><i class="fas fa-users"></i><strong>رفرال شما:</strong> <span id="userReferral"></span></p>
+            <div id="userInfoPage" class="hidden">
+                <div class="user-info-card fade-in">
+                    <h2 style="margin-bottom: 1rem;">✅ هویت شما تایید شد</h2>
+                    <div class="user-info-item">
+                        <span class="user-info-label">رنک شما:</span>
+                        <span class="user-info-value" id="userRank"></span>
+                    </div>
+                    <div class="user-info-item">
+                        <span class="user-info-label">نیم گیم شما:</span>
+                        <span class="user-info-value" id="userGameName"></span>
+                    </div>
+                    <div class="user-info-item">
+                        <span class="user-info-label">ایدی عددی شما:</span>
+                        <span class="user-info-value" id="userUserId"></span>
+                    </div>
+                    <div class="user-info-item">
+                        <span class="user-info-label">رفرال شما:</span>
+                        <span class="user-info-value" id="userReferral"></span>
+                    </div>
                 </div>
-                <p style="text-align: center; margin-top: 20px;">
-                    بزودی پنل‌های مربوطه برای شما هم در دسترس قرار می‌گیرد.
-                </p>
+                <div class="card">
+                    <p style="text-align: center;">
+                        بزودی پنل‌های مربوطه برای شما هم در دسترس قرار می‌گیرد.
+                    </p>
+                </div>
             </div>
             
             <!-- صفحه پنل مدیریت -->
-            <div id="adminPanelPage" class="section hidden">
-                <h2><i class="fas fa-user-shield"></i> پنل مدیریت</h2>
-                <div class="user-info">
-                    <p><i class="fas fa-user"></i><strong>خوش آمدید:</strong> <span id="adminName"></span></p>
-                    <p><i class="fas fa-crown"></i><strong>رنک شما:</strong> <span id="adminRank"></span></p>
-                    <p><i class="fas fa-id-card"></i><strong>ایدی عددی:</strong> <span id="adminUserId"></span></p>
-                </div>
-
-                <div class="admin-stats">
-                    <div class="stat-card">
-                        <i class="fas fa-users"></i>
-                        <h3>۲۴۵</h3>
-                        <p>کاربران کل</p>
+            <div id="adminPanelPage" class="hidden">
+                <div class="card fade-in">
+                    <div class="card-header">
+                        <i class="material-icons">admin_panel_settings</i>
+                        <h2>پنل مدیریت</h2>
                     </div>
-                    <div class="stat-card">
-                        <i class="fas fa-user-plus"></i>
-                        <h3>۱۲</h3>
-                        <p>افزوده شده امروز</p>
+                    <div class="admin-panel-grid">
+                        <div class="admin-panel-card">
+                            <div class="admin-panel-icon">
+                                <i class="material-icons">manage_accounts</i>
+                            </div>
+                            <div class="admin-panel-title">مدیریت کاربران</div>
+                        </div>
+                        <div class="admin-panel-card">
+                            <div class="admin-panel-icon">
+                                <i class="material-icons">payments</i>
+                            </div>
+                            <div class="admin-panel-title">مدیریت پرداخت‌ها</div>
+                        </div>
+                        <div class="admin-panel-card">
+                            <div class="admin-panel-icon">
+                                <i class="material-icons">analytics</i>
+                            </div>
+                            <div class="admin-panel-title">آمار و گزارشات</div>
+                        </div>
+                        <div class="admin-panel-card">
+                            <div class="admin-panel-icon">
+                                <i class="material-icons">settings</i>
+                            </div>
+                            <div class="admin-panel-title">تنظیمات سیستم</div>
+                        </div>
                     </div>
-                    <div class="stat-card">
-                        <i class="fas fa-shield-alt"></i>
-                        <h3>۸</h3>
-                        <p>ادمین‌ها</p>
-                    </div>
-                    <div class="stat-card">
-                        <i class="fas fa-chart-line"></i>
-                        <h3>+۱۸٪</h3>
-                        <p>رشد هفتگی</p>
-                    </div>
-                </div>
-                
-                <div class="action-buttons">
-                    <button class="btn btn-success" onclick="showAddUserForm()"><i class="fas fa-user-plus"></i> افزودن کاربر جدید</button>
-                    <button class="btn btn-danger" onclick="showRemoveUserForm()"><i class="fas fa-user-minus"></i> حذف کاربر</button>
-                    <button class="btn" onclick="showStats()"><i class="fas fa-chart-bar"></i> آمار و گزارشات</button>
-                    <button class="btn btn-outline" onclick="showSettings()"><i class="fas fa-cog"></i> تنظیمات سیستم</button>
                 </div>
             </div>
-            
-            <!-- فرم افزودن کاربر -->
-            <div id="addUserForm" class="section hidden">
-                <h2><i class="fas fa-user-plus"></i> افزودن کاربر جدید</h2>
-                <div class="form-group with-icon">
-                    <label for="addUserId">ایدی عددی کاربر:</label>
-                    <i class="fas fa-id-card"></i>
-                    <input type="number" id="addUserId" placeholder="مثال: 123456789" />
-                </div>
-                <div class="form-group with-icon">
-                    <label for="addGameName">نیم گیم:</label>
-                    <i class="fas fa-gamepad"></i>
-                    <input type="text" id="addGameName" placeholder="نام در بازی" />
-                </div>
-                <div class="form-group with-icon">
-                    <label for="addReferral">رفرال:</label>
-                    <i class="fas fa-users"></i>
-                    <input type="text" id="addReferral" placeholder="کد رفرال" />
-                </div>
-                <div class="form-group">
-                    <label for="addRank">رنک مربوطه:</label>
-                    <select id="addRank"></select>
-                </div>
-                <div class="form-group">
-                    <label for="addSecurityQuestion">سوال امنیتی:</label>
-                    <select id="addSecurityQuestion">
-                        <option value="">-- انتخاب سوال امنیتی --</option>
-                        <option value="نام اولین معلم شما؟">نام اولین معلم شما؟</option>
-                        <option value="نام اولین حیوان خانگی شما؟">نام اولین حیوان خانگی شما؟</option>
-                        <option value="شهر تولد شما؟">شهر تولد شما؟</option>
-                        <option value="نام بهترین دوست دوران کودکی شما؟">نام بهترین دوست دوران کودکی شما؟</option>
-                        <option value="مدل اولین ماشین شما؟">مدل اولین ماشین شما؟</option>
-                        <option value="نام مدرسه ابتدایی شما؟">نام مدرسه ابتدایی شما؟</option>
-                    </select>
-                </div>
-                <div class="form-group with-icon">
-                    <label for="addSecurityAnswer">پاسخ سوال امنیتی:</label>
-                    <i class="fas fa-shield-alt"></i>
-                    <input type="text" id="addSecurityAnswer" placeholder="پاسخ سوال امنیتی خود را وارد کنید" />
-                </div>
-                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                    <button class="btn btn-success" onclick="addUser()"><i class="fas fa-check"></i> افزودن کاربر</button>
-                    <button class="btn btn-outline" onclick="hideAddUserForm()"><i class="fas fa-arrow-right"></i> بازگشت</button>
-                </div>
-            </div>
-            
-            <!-- فرم حذف کاربر -->
-            <div id="removeUserForm" class="section hidden">
-                <h2><i class="fas fa-user-minus"></i> حذف کاربر</h2>
-                <div class="form-group with-icon">
-                    <label for="removeUserId">ایدی عددی کاربر:</label>
-                    <i class="fas fa-id-card"></i>
-                    <input type="number" id="removeUserId" placeholder="مثال: 123456789" />
-                </div>
-                <div class="form-group">
-                    <label for="removeSecurityQuestion">سوال امنیتی:</label>
-                    <select id="removeSecurityQuestion">
-                        <option value="">-- انتخاب سوال امنیتی --</option>
-                        <option value="نام اولین معلم شما؟">نام اولین معلم شما؟</option>
-                        <option value="نام اولین حیوان خانگی شما؟">نام اولین حیوان خانگی شما؟</option>
-                        <option value="شهر تولد شما؟">شهر تولد شما؟</option>
-                        <option value="نام بهترین دوست دوران کودکی شما؟">نام بهترین دوست دوران کودکی شما؟</option>
-                        <option value="مدل اولین ماشین شما؟">مدل اولین ماشین شما؟</option>
-                        <option value="نام مدرسه ابتدایی شما؟">نام مدرسه ابتدایی شما؟</option>
-                    </select>
-                </div>
-                <div class="form-group with-icon">
-                    <label for="removeSecurityAnswer">پاسخ سوال امنیتی:</label>
-                    <i class="fas fa-shield-alt"></i>
-                    <input type="text" id="removeSecurityAnswer" placeholder="پاسخ سوال امنیتی خود را وارد کنید" />
-                </div>
-                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                    <button class="btn btn-danger" onclick="removeUser()"><i class="fas fa-trash"></i> حذف کاربر</button>
-                    <button class="btn btn-outline" onclick="hideRemoveUserForm()"><i class="fas fa-arrow-right"></i> بازگشت</button>
-                </div>
-            </div>
-            
-            <!-- وضعیت بارگذاری و پیام‌ها -->
-            <div id="loading" class="loading hidden">
-                <div class="spinner"></div>
-                <p>در حال بارگذاری...</p>
-            </div>
-            
-            <div id="message" class="hidden"></div>
         </div>
     </div>
 
     <script>
-        const API_BASE = 'https://p-admin.hupadr.workers.dev';
-        let tg = null;
-        let currentUser = null;
-        let adminUser = null;
-        
-        // مقداردهی اولیه
-        document.addEventListener('DOMContentLoaded', function() {
-            // بررسی اینکه آیا در محیط تلگرام هستیم
-            if (window.Telegram && window.Telegram.WebApp) {
-                tg = window.Telegram.WebApp;
-                tg.expand();
-                tg.enableClosingConfirmation();
-                
-                // اگر کاربر از طریق تلگرام وارد شده، اطلاعاتش را بگیر
-                const initData = tg.initDataUnsafe;
-                if (initData && initData.user) {
-                    checkUserStatus(initData.user.id);
-                } else {
-                    showError('شما از طریق تلگرام وارد نشده‌اید. لطفاً از طریق ربات تلگرام به این پنل دسترسی پیدا کنید.');
-                }
-            } else {
-                // اگر از مرورگر عادی وارد شده
-                showError('این پنل فقط از طریق تلگرام قابل دسترسی است. لطفاً از طریق ربات تلگرام به این پنل دسترسی پیدا کنید.');
-            }
+        // شبیه‌سازی داده‌های کاربر
+        const userData = {
+            id: 123456789,
+            gameName: "Player_123",
+            rank: "ادمین سطح ۲",
+            referral: "REF123456"
+        };
 
-            // تنظیمات حالت تاریک/روشن
-            const themeToggle = document.getElementById('themeToggle');
-            const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+        // شبیه‌سازی وضعیت کاربر
+        const userStatus = {
+            isAdmin: true,
+            isLoggedIn: false,
+            hasPassword: false
+        };
+
+        // شبیه‌سازی داده‌های تم
+        let currentTheme = localStorage.getItem('theme') || 'light';
+
+        // تنظیم تم اولیه
+        function setTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+            currentTheme = theme;
             
-            // بررسی وضعیت ذخیره شده در localStorage
-            const savedTheme = localStorage.getItem('theme');
-            if (savedTheme === 'dark' || (!savedTheme && prefersDarkScheme.matches)) {
-                document.body.classList.add('dark-mode');
-                themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+            const themeIcon = document.querySelector('#themeToggle i');
+            if (theme === 'dark') {
+                themeIcon.textContent = 'light_mode';
             } else {
-                document.body.classList.remove('dark-mode');
-                themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
-            }
-            
-            // افزودن رویداد کلیک برای تغییر تم
-            themeToggle.addEventListener('click', function() {
-                if (document.body.classList.contains('dark-mode')) {
-                    document.body.classList.remove('dark-mode');
-                    localStorage.setItem('theme', 'light');
-                    themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
-                } else {
-                    document.body.classList.add('dark-mode');
-                    localStorage.setItem('theme', 'dark');
-                    themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
-                }
-            });
-        });
-        
-        // بررسی وضعیت کاربر
-        async function checkUserStatus(userId) {
-            showLoading();
-            try {
-                const response = await fetch(`${API_BASE}/api/check-user`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        user_id: parseInt(userId)
-                    })
-                });
-                
-                const result = await response.json();
-                
-                if (response.ok) {
-                    if (result.registered) {
-                        currentUser = result.user;
-                        
-                        if (result.hasPassword) {
-                            // کاربر رمز دارد، صفحه لاگین نشان داده شود
-                            showLoginPage();
-                        } else {
-                            // کاربر ثبت شده اما رمز ندارد
-                            showSetupPage();
-                        }
-                    } else {
-                        // کاربر وجود ندارد
-                        showError(result.message || 'شما در سیستم ثبت‌نام نشده‌اید.');
-                    }
-                } else {
-                    showError(result.error || 'خطا در بررسی وضعیت کاربر');
-                }
-            } catch (error) {
-                showError('خطا در ارتباط با سرور: ' + error.message);
-            } finally {
-                hideLoading();
+                themeIcon.textContent = 'dark_mode';
             }
         }
-        
-        // لاگین کاربر
-        async function login() {
-            const userId = document.getElementById('userId').value;
+
+        // تغییر تم
+        function toggleTheme() {
+            if (currentTheme === 'light') {
+                setTheme('dark');
+            } else {
+                setTheme('light');
+            }
+        }
+
+        // شبیه‌سازی عملیات بررسی دسترسی
+        function checkAccess() {
+            setTimeout(() => {
+                document.getElementById('checkingPage').classList.add('hidden');
+                
+                if (!userStatus.isAdmin) {
+                    showError("شما دسترسی لازم برای استفاده از این پنل را ندارید.");
+                    return;
+                }
+                
+                if (!userStatus.isLoggedIn) {
+                    if (!userStatus.hasPassword) {
+                        showSetupPage();
+                    } else {
+                        showLoginPage();
+                    }
+                } else {
+                    showAdminPanel();
+                }
+            }, 2000);
+        }
+
+        // نمایش صفحه خطا
+        function showError(message) {
+            document.getElementById('errorMessage').textContent = message;
+            document.getElementById('errorPage').classList.remove('hidden');
+        }
+
+        // نمایش صفحه لاگین
+        function showLoginPage() {
+            document.getElementById('userId').value = userData.id;
+            document.getElementById('loginPage').classList.remove('hidden');
+        }
+
+        // نمایش صفحه تنظیم رمز
+        function showSetupPage() {
+            document.getElementById('setupPage').classList.remove('hidden');
+        }
+
+        // نمایش پنل مدیریت
+        function showAdminPanel() {
+            document.getElementById('userInfoPage').classList.remove('hidden');
+            document.getElementById('adminPanelPage').classList.remove('hidden');
+            
+            // پر کردن اطلاعات کاربر
+            document.getElementById('userRank').textContent = userData.rank;
+            document.getElementById('userGameName').textContent = userData.gameName;
+            document.getElementById('userUserId').textContent = userData.id;
+            document.getElementById('userReferral').textContent = userData.referral;
+        }
+
+        // شبیه‌سازی عملیات لاگین
+        function login() {
             const password = document.getElementById('password').value;
             
             if (!password) {
-                showMessage('لطفاً رمز عبور را وارد کنید.', 'error');
+                alert("لطفاً رمز عبور را وارد کنید.");
                 return;
             }
             
-            showLoading();
-            try {
-                const response = await fetch(`${API_BASE}/api/auth`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        user_id: parseInt(userId),
-                        password: password
-                    })
-                });
-                
-                const result = await response.json();
-                
-                if (response.ok) {
-                    adminUser = result.user;
-                    
-                    if (['Developer', 'CC Manager', 'CC Director', 'CC Warden'].includes(adminUser.rank)) {
-                        showAdminPanel();
-                    } else {
-                        showUserInfo();
-                    }
-                } else {
-                    showMessage(result.error || 'خطا در ورود به سیستم', 'error');
-                }
-            } catch (error) {
-                showMessage('خطا در ارتباط با سرور: ' + error.message, 'error');
-            } finally {
-                hideLoading();
-            }
+            // شبیه‌سازی لاگین موفق
+            userStatus.isLoggedIn = true;
+            document.getElementById('loginPage').classList.add('hidden');
+            showAdminPanel();
         }
-        
-        // تنظیم رمز عبور
-        async function setupPassword() {
+
+        // شبیه‌سازی تنظیم رمز عبور
+        function setupPassword() {
             const newPassword = document.getElementById('newPassword').value;
-            const securityQuestion = document.getElementById('setupSecurityQuestion').value;
+            const securityQuestion = document.getElementById('securityQuestion').value;
             const securityAnswer = document.getElementById('securityAnswer').value;
             
             if (!newPassword || !securityQuestion || !securityAnswer) {
-                showMessage('لطفاً تمام فیلدها را پر کنید.', 'error');
+                alert("لطفاً تمام فیلدها را پر کنید.");
                 return;
             }
             
-            showLoading();
-            try {
-                const response = await fetch(`${API_BASE}/api/setup-password`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        user_id: currentUser.user_id,
-                        password: newPassword,
-                        security_question: securityQuestion,
-                        security_answer: securityAnswer
-                    })
-                });
-                
-                if (response.ok) {
-                    showMessage('رمز عبور و سوال امنیتی با موفقیت تنظیم شد.', 'success');
-                    
-                    // بعد از تنظیم رمز، وضعیت کاربر را بررسی کن
-                    setTimeout(() => {
-                        if (['Developer', 'CC Manager', 'CC Director', 'CC Warden'].includes(currentUser.rank)) {
-                            showAdminPanel();
-                        } else {
-                            showUserInfo();
-                        }
-                    }, 2000);
-                } else {
-                    const error = await response.json();
-                    showMessage(error.error || 'خطا در تنظیم رمز عبور', 'error');
-                }
-            } catch (error) {
-                showMessage('خطا در ارتباط با سرور: ' + error.message, 'error');
-            } finally {
-                hideLoading();
-            }
-        }
-        
-        // افزودن کاربر جدید
-        async function addUser() {
-            const userId = document.getElementById('addUserId').value;
-            const gameName = document.getElementById('addGameName').value;
-            const referral = document.getElementById('addReferral').value;
-            const rank = document.getElementById('addRank').value;
-            const securityQuestion = document.getElementById('addSecurityQuestion').value;
-            const securityAnswer = document.getElementById('addSecurityAnswer').value;
-            
-            if (!userId || !rank || !securityQuestion || !securityAnswer) {
-                showMessage('لطفاً فیلدهای اجباری را پر کنید.', 'error');
-                return;
-            }
-            
-            showLoading();
-            try {
-                const response = await fetch(`${API_BASE}/api/add-user`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        admin_id: adminUser.user_id,
-                        security_question: securityQuestion,
-                        security_answer: securityAnswer,
-                        user_id: parseInt(userId),
-                        game_name: gameName,
-                        referral: referral,
-                        rank: rank
-                    })
-                });
-                
-                if (response.ok) {
-                    showMessage('کاربر با موفقیت اضافه شد.', 'success');
-                    hideAddUserForm();
-                } else {
-                    const error = await response.json();
-                    showMessage(error.error || 'خطا در افزودن کاربر', 'error');
-                }
-            } catch (error) {
-                showMessage('خطا در ارتباط با سرور: ' + error.message, 'error');
-            } finally {
-                hideLoading();
-            }
-        }
-        
-        // حذف کاربر
-        async function removeUser() {
-            const userId = document.getElementById('removeUserId').value;
-            const securityQuestion = document.getElementById('removeSecurityQuestion').value;
-            const securityAnswer = document.getElementById('removeSecurityAnswer').value;
-            
-            if (!userId || !securityQuestion || !securityAnswer) {
-                showMessage('لطفاً فیلدهای اجباری را پر کنید.', 'error');
-                return;
-            }
-            
-            showLoading();
-            try {
-                const response = await fetch(`${API_BASE}/api/remove-user`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        admin_id: adminUser.user_id,
-                        security_question: securityQuestion,
-                        security_answer: securityAnswer,
-                        user_id: parseInt(userId)
-                    })
-                });
-                
-                if (response.ok) {
-                    showMessage('کاربر با موفقیت حذف شد.', 'success');
-                    hideRemoveUserForm();
-                } else {
-                    const error = await response.json();
-                    showMessage(error.error || 'خطا در حذف کاربر', 'error');
-                }
-            } catch (error) {
-                showMessage('خطا در ارتباط با سرور: ' + error.message, 'error');
-            } finally {
-                hideLoading();
-            }
-        }
-        
-        // دریافت لیست رنک‌های قابل اختصاص
-        async function loadAssignableRanks() {
-            try {
-                const response = await fetch(`${API_BASE}/api/assignable-ranks?admin_id=${adminUser.user_id}`);
-                
-                if (response.ok) {
-                    const ranks = await response.json();
-                    const rankSelect = document.getElementById('addRank');
-                    
-                    rankSelect.innerHTML = '';
-                    ranks.forEach(rank => {
-                        const option = document.createElement('option');
-                        option.value = rank;
-                        option.textContent = rank;
-                        rankSelect.appendChild(option);
-                    });
-                }
-            } catch (error) {
-                console.error('Error loading ranks:', error);
-            }
-        }
-        
-        // توابع نمایش/پنهان کردن صفحات
-        function showLoginPage() {
-            hideAllPages();
-            document.getElementById('loginPage').classList.remove('hidden');
-            document.getElementById('userId').value = currentUser.user_id;
-        }
-        
-        function showSetupPage() {
-            hideAllPages();
-            document.getElementById('setupPage').classList.remove('hidden');
-        }
-        
-        function showUserInfo() {
-            hideAllPages();
-            document.getElementById('userInfoPage').classList.remove('hidden');
-            
-            document.getElementById('userRank').textContent = currentUser.rank;
-            document.getElementById('userGameName').textContent = currentUser.game_name || 'تعریف نشده';
-            document.getElementById('userUserId').textContent = currentUser.user_id;
-            document.getElementById('userReferral').textContent = currentUser.referral || 'تعریف نشده';
-        }
-        
-        function showAdminPanel() {
-            hideAllPages();
-            document.getElementById('adminPanelPage').classList.remove('hidden');
-            
-            document.getElementById('adminName').textContent = adminUser.game_name || adminUser.user_id;
-            document.getElementById('adminRank').textContent = adminUser.rank;
-            document.getElementById('adminUserId').textContent = adminUser.user_id;
-        }
-        
-        function showAddUserForm() {
-            hideAllPages();
-            document.getElementById('addUserForm').classList.remove('hidden');
-            loadAssignableRanks();
-        }
-        
-        function hideAddUserForm() {
-            showAdminPanel();
-        }
-        
-        function showRemoveUserForm() {
-            hideAllPages();
-            document.getElementById('removeUserForm').classList.remove('hidden');
-        }
-        
-        function hideRemoveUserForm() {
-            showAdminPanel();
-        }
-        
-        function showError(message) {
-            hideAllPages();
-            document.getElementById('errorPage').classList.remove('hidden');
-            document.getElementById('errorMessage').textContent = message;
-        }
-        
-        function hideAllPages() {
-            document.getElementById('checkingPage').classList.add('hidden');
-            document.getElementById('errorPage').classList.add('hidden');
-            document.getElementById('loginPage').classList.add('hidden');
+            // شبیه‌سازی ذخیره موفق
+            userStatus.hasPassword = true;
+            userStatus.isLoggedIn = true;
             document.getElementById('setupPage').classList.add('hidden');
-            document.getElementById('userInfoPage').classList.add('hidden');
-            document.getElementById('adminPanelPage').classList.add('hidden');
-            document.getElementById('addUserForm').classList.add('hidden');
-            document.getElementById('removeUserForm').classList.add('hidden');
+            showAdminPanel();
         }
-        
-        function showLoading() {
-            document.getElementById('loading').classList.remove('hidden');
-        }
-        
-        function hideLoading() {
-            document.getElementById('loading').classList.add('hidden');
-        }
-        
-        function showMessage(message, type) {
-            const messageDiv = document.getElementById('message');
-            messageDiv.textContent = message;
-            messageDiv.className = type;
-            messageDiv.classList.remove('hidden');
+
+        // مقداردهی اولیه
+        document.addEventListener('DOMContentLoaded', function() {
+            // تنظیم تم
+            setTheme(currentTheme);
             
-            setTimeout(() => {
-                messageDiv.classList.add('hidden');
-            }, 5000);
-        }
-
-        // توابع جدید برای دکمه‌های اضافی
-        function showStats() {
-            showMessage('این بخش به زودی اضافه خواهد شد.', 'warning');
-        }
-
-        function showSettings() {
-            showMessage('این بخش به زودی اضافه خواهد شد.', 'warning');
-        }
+            // افزودن رویداد کلیک برای دکمه تغییر تم
+            document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+            
+            // شروع بررسی دسترسی
+            checkAccess();
+        });
     </script>
 </body>
 </html>
