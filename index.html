@@ -1083,46 +1083,43 @@
 
 
 
-        // نمایش صفحه لیست ادمین‌ها
+        // نمایش لیست ادمین‌ها
         async function showAdminsList() {
+            const adminsContainer = document.getElementById('adminsContainer');
+            adminsContainer.innerHTML = ''; // پاک کردن محتویات قبلی
             showLoading();
+        
             try {
-                const response = await fetch(`${API_BASE}/api/get-admins`, {
-                    method: 'GET',
-                    headers: { 'Content-Type': 'application/json' }
-                });
+                const response = await fetch(`${API_BASE}/api/get-admins`);
                 const result = await response.json();
         
-                if (response.ok) {
-                    const container = document.getElementById('adminsContainer');
-                    container.innerHTML = '';
-        
-                    if (result.admins && result.admins.length > 0) {
+                if (response.ok && Array.isArray(result.admins)) {
+                    if (result.admins.length === 0) {
+                        adminsContainer.innerHTML = '<p style="text-align:center;">هیچ ادمینی یافت نشد.</p>';
+                    } else {
                         result.admins.forEach(admin => {
                             const card = document.createElement('div');
                             card.className = 'info-card';
                             card.innerHTML = `
                                 <i class="fas fa-user-shield"></i>
                                 <div class="info-card-content">
-                                    <h3>${admin.username || 'نام نامشخص'}</h3>
-                                    <p><strong>ایدی:</strong> ${admin.user_id}</p>
-                                    <p><strong>رنک:</strong> ${admin.rank}</p>
+                                    <h3>${admin.name || 'نام مشخص نشده'}</h3>
+                                    <p>رنک: ${admin.rank || 'نامشخص'}</p>
+                                    <p>ایدی: ${admin.user_id}</p>
                                 </div>
                             `;
-                            container.appendChild(card);
+                            adminsContainer.appendChild(card);
                         });
-                    } else {
-                        container.innerHTML = '<p>هیچ ادمینی ثبت نشده است.</p>';
                     }
         
-                    hideAllPages();
+                    // نمایش صفحه ادمین‌ها و مخفی کردن پنل مدیریت
+                    document.getElementById('adminPanelPage').classList.add('hidden');
                     document.getElementById('adminsListPage').classList.remove('hidden');
                 } else {
-                    const error = result.error || 'خطا در دریافت اطلاعات ادمین‌ها';
-                    showToast('error', 'خطا', error);
+                    showToast('error', 'خطا', 'عدم دریافت اطلاعات ادمین‌ها');
                 }
-            } catch (err) {
-                showToast('error', 'خطا', 'ارتباط با سرور برقرار نشد: ' + err.message);
+            } catch (error) {
+                showToast('error', 'خطا', 'خطا در ارتباط با سرور: ' + error.message);
             } finally {
                 hideLoading();
             }
@@ -1134,13 +1131,13 @@
             document.getElementById('adminPanelPage').classList.remove('hidden');
         }
         
-        // مخفی کردن تمام صفحات برای مدیریت نمایش
-        function hideAllPages() {
-            const pages = ['checkingPage', 'errorPage', 'loginPage', 'setupPage', 'userInfoPage', 'adminPanelPage', 'addUserForm', 'removeUserForm', 'adminsListPage'];
-            pages.forEach(id => document.getElementById(id).classList.add('hidden'));
+        // توابع کمکی برای نمایش/مخفی کردن لودینگ
+        function showLoading() {
+            document.getElementById('loading').classList.remove('hidden');
         }
-
-
+        function hideLoading() {
+            document.getElementById('loading').classList.add('hidden');
+        }
 
 
 
