@@ -1079,6 +1079,78 @@
                 hideLoading();
             }
         }
+
+
+
+
+        // نمایش صفحه لیست ادمین‌ها
+        async function showAdminsList() {
+            showLoading();
+            try {
+                const response = await fetch(`${API_BASE}/api/get-admins`, {
+                    method: 'GET',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                const result = await response.json();
+        
+                if (response.ok) {
+                    const container = document.getElementById('adminsContainer');
+                    container.innerHTML = '';
+        
+                    if (result.admins && result.admins.length > 0) {
+                        result.admins.forEach(admin => {
+                            const card = document.createElement('div');
+                            card.className = 'info-card';
+                            card.innerHTML = `
+                                <i class="fas fa-user-shield"></i>
+                                <div class="info-card-content">
+                                    <h3>${admin.username || 'نام نامشخص'}</h3>
+                                    <p><strong>ایدی:</strong> ${admin.user_id}</p>
+                                    <p><strong>رنک:</strong> ${admin.rank}</p>
+                                </div>
+                            `;
+                            container.appendChild(card);
+                        });
+                    } else {
+                        container.innerHTML = '<p>هیچ ادمینی ثبت نشده است.</p>';
+                    }
+        
+                    hideAllPages();
+                    document.getElementById('adminsListPage').classList.remove('hidden');
+                } else {
+                    const error = result.error || 'خطا در دریافت اطلاعات ادمین‌ها';
+                    showToast('error', 'خطا', error);
+                }
+            } catch (err) {
+                showToast('error', 'خطا', 'ارتباط با سرور برقرار نشد: ' + err.message);
+            } finally {
+                hideLoading();
+            }
+        }
+        
+        // مخفی کردن لیست ادمین‌ها و بازگشت به پنل مدیریت
+        function hideAdminsList() {
+            document.getElementById('adminsListPage').classList.add('hidden');
+            document.getElementById('adminPanelPage').classList.remove('hidden');
+        }
+        
+        // مخفی کردن تمام صفحات برای مدیریت نمایش
+        function hideAllPages() {
+            const pages = ['checkingPage', 'errorPage', 'loginPage', 'setupPage', 'userInfoPage', 'adminPanelPage', 'addUserForm', 'removeUserForm', 'adminsListPage'];
+            pages.forEach(id => document.getElementById(id).classList.add('hidden'));
+        }
+
+
+
+
+
+
+
+
+
+
+
+
         
         // دریافت لیست رنک‌های قابل اختصاص
         async function loadAssignableRanks() {
