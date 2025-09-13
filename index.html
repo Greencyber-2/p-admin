@@ -1084,29 +1084,12 @@
         }
 
 
-
-                
-                   // نمایش لیست ادمین‌ها
-           const RANKS = {
-            'Developer': 10,
-            'CC Manager': 9,
-            'CC Director': 8,
-            'CC Warden': 7,
-            '(R6)CC Team': 6,
-            '(R5)Head Of Creator': 5,
-            '(R4)Contant Creator +': 4,
-            '(R3)Contant Creator': 3,
-            '(R2)Video Maker +': 2,
-            '(R2)Streamer +': 2,
-            '(R1)Video Maker': 1,
-            '(R1)Streamer': 1,
-            '(R0)V.I.P': 1
-        };
         
-        // نمایش لیست ادمین‌ها با مداد
+                        
+           // نمایش لیست ادمین‌ها
         async function showAdminsList() {
             const adminsContainer = document.getElementById('adminsContainer');
-            adminsContainer.innerHTML = '';
+            adminsContainer.innerHTML = ''; // پاک کردن محتویات قبلی
             showLoading();
         
             try {
@@ -1117,28 +1100,22 @@
                     if (result.admins.length === 0) {
                         adminsContainer.innerHTML = '<p style="text-align:center;">هیچ ادمینی یافت نشد.</p>';
                     } else {
-                        const filteredAdmins = result.admins
-                            .filter(admin => admin.rank !== 'Developer')
-                            .sort((a, b) => (RANKS[b.rank] || 0) - (RANKS[a.rank] || 0));
-        
-                        filteredAdmins.forEach(admin => {
+                        result.admins.forEach(admin => {
                             const card = document.createElement('div');
                             card.className = 'info-card';
                             card.innerHTML = `
                                 <i class="fas fa-user-shield"></i>
                                 <div class="info-card-content">
-                                    <h3>${admin.game_name || 'نام مشخص نشده'}</h3>
+                                    <h3>${admin.name || 'نام مشخص نشده'}</h3>
                                     <p>رنک: ${admin.rank || 'نامشخص'}</p>
                                     <p>ایدی: ${admin.user_id}</p>
                                 </div>
-                                <button class="edit-rank-btn" onclick="openRankPopup('${admin.user_id}', '${admin.rank}')">
-                                    <i class="fas fa-pencil-alt"></i>
-                                </button>
                             `;
                             adminsContainer.appendChild(card);
                         });
                     }
         
+                    // نمایش صفحه ادمین‌ها و مخفی کردن پنل مدیریت
                     document.getElementById('adminPanelPage').classList.add('hidden');
                     document.getElementById('adminsListPage').classList.remove('hidden');
                 } else {
@@ -1151,6 +1128,21 @@
             }
         }
         
+        // مخفی کردن لیست ادمین‌ها و بازگشت به پنل مدیریت
+        function hideAdminsList() {
+            document.getElementById('adminsListPage').classList.add('hidden');
+            document.getElementById('adminPanelPage').classList.remove('hidden');
+        }
+        
+        // توابع کمکی برای نمایش/مخفی کردن لودینگ
+        function showLoading() {
+            document.getElementById('loading').classList.remove('hidden');
+        }
+        function hideLoading() {
+            document.getElementById('loading').classList.add('hidden');
+        }
+        
+                
         // // باز کردن پاپ‌آپ تغییر رنک
         // function openRankPopup(userId, currentRank) {
         //     // تعیین رنک‌های قابل انتخاب بر اساس رنک فعلی کاربر
