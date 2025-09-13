@@ -626,23 +626,6 @@
             </div>
 
 
-            <!-- صفحه لیست ادمین‌ها -->
-            <div id="adminsListPage" class="hidden" style="padding:20px; max-width:800px; margin:auto;">
-                <h2 style="text-align:center; margin-bottom:20px;">لیست ادمین‌ها</h2>
-                <div id="adminsContainer" style="display:flex; flex-direction:column; gap:15px;"></div>
-                <div style="text-align:center; margin-top:20px;">
-                    <button onclick="hideAdminsList()" style="padding:10px 20px; border:none; background:#2c3e50; color:#fff; border-radius:8px; cursor:pointer;">بازگشت</button>
-                </div>
-            </div>
-            
-            <!-- لودینگ ساده -->
-            <div id="loading" class="hidden" style="position:fixed; top:0; left:0; width:100%; height:100%; 
-                 background:rgba(0,0,0,0.5); display:flex; justify-content:center; align-items:center; z-index:1000;">
-                <div style="padding:20px; background:#fff; border-radius:12px; font-weight:bold;">در حال بارگذاری...</div>
-            </div>
-
-
-            
             <!-- صفحه اطلاعات کاربر -->
             <div id="userInfoPage" class="section hidden">
                 <div class="user-info">
@@ -1168,63 +1151,63 @@
             }
         }
         
-        // باز کردن پاپ‌آپ تغییر رنک
-        function openRankPopup(userId, currentRank) {
-            // تعیین رنک‌های قابل انتخاب بر اساس رنک فعلی کاربر
-            const currentRankValue = RANKS[currentRank] || 0;
-            const availableRanks = Object.keys(RANKS).filter(rank => RANKS[rank] <= currentRankValue);
+        // // باز کردن پاپ‌آپ تغییر رنک
+        // function openRankPopup(userId, currentRank) {
+        //     // تعیین رنک‌های قابل انتخاب بر اساس رنک فعلی کاربر
+        //     const currentRankValue = RANKS[currentRank] || 0;
+        //     const availableRanks = Object.keys(RANKS).filter(rank => RANKS[rank] <= currentRankValue);
         
-            // ساخت محتویات پاپ‌آپ
-            const popupHtml = `
-                <div class="popup-overlay">
-                    <div class="popup-content">
-                        <h3>تغییر رنک کاربر</h3>
-                        <select id="rankSelect">
-                            ${availableRanks.map(rank => `<option value="${rank}" ${rank === currentRank ? 'selected' : ''}>${rank}</option>`).join('')}
-                        </select>
-                        <div style="margin-top:15px;">
-                            <button class="btn btn-success" onclick="updateUserRank('${userId}')">ثبت</button>
-                            <button class="btn btn-danger" onclick="closeRankPopup()">انصراف</button>
-                        </div>
-                    </div>
-                </div>
-            `;
-            document.body.insertAdjacentHTML('beforeend', popupHtml);
-        }
+        //     // ساخت محتویات پاپ‌آپ
+        //     const popupHtml = `
+        //         <div class="popup-overlay">
+        //             <div class="popup-content">
+        //                 <h3>تغییر رنک کاربر</h3>
+        //                 <select id="rankSelect">
+        //                     ${availableRanks.map(rank => `<option value="${rank}" ${rank === currentRank ? 'selected' : ''}>${rank}</option>`).join('')}
+        //                 </select>
+        //                 <div style="margin-top:15px;">
+        //                     <button class="btn btn-success" onclick="updateUserRank('${userId}')">ثبت</button>
+        //                     <button class="btn btn-danger" onclick="closeRankPopup()">انصراف</button>
+        //                 </div>
+        //             </div>
+        //         </div>
+        //     `;
+        //     document.body.insertAdjacentHTML('beforeend', popupHtml);
+        // }
         
-        // بستن پاپ‌آپ
-        function closeRankPopup() {
-            const popup = document.querySelector('.popup-overlay');
-            if (popup) popup.remove();
-        }
+        // // بستن پاپ‌آپ
+        // function closeRankPopup() {
+        //     const popup = document.querySelector('.popup-overlay');
+        //     if (popup) popup.remove();
+        // }
         
-        // ارسال رنک جدید به API و آپدیت دیتابیس
-        async function updateUserRank(userId) {
-            const select = document.getElementById('rankSelect');
-            const newRank = select.value;
+        // // ارسال رنک جدید به API و آپدیت دیتابیس
+        // async function updateUserRank(userId) {
+        //     const select = document.getElementById('rankSelect');
+        //     const newRank = select.value;
         
-            showLoading();
-            try {
-                const response = await fetch(`${API_BASE}/api/update-rank`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ user_id: userId, new_rank: newRank })
-                });
+        //     showLoading();
+        //     try {
+        //         const response = await fetch(`${API_BASE}/api/update-rank`, {
+        //             method: 'POST',
+        //             headers: { 'Content-Type': 'application/json' },
+        //             body: JSON.stringify({ user_id: userId, new_rank: newRank })
+        //         });
         
-                const result = await response.json();
-                if (response.ok) {
-                    showToast('success', 'موفق', 'رنک با موفقیت تغییر یافت!');
-                    closeRankPopup();
-                    showAdminsList(); // رفرش لیست
-                } else {
-                    showToast('error', 'خطا', result.error || 'خطا در آپدیت رنک');
-                }
-            } catch (error) {
-                showToast('error', 'خطا', error.message);
-            } finally {
-                hideLoading();
-            }
-        }
+        //         const result = await response.json();
+        //         if (response.ok) {
+        //             showToast('success', 'موفق', 'رنک با موفقیت تغییر یافت!');
+        //             closeRankPopup();
+        //             showAdminsList(); // رفرش لیست
+        //         } else {
+        //             showToast('error', 'خطا', result.error || 'خطا در آپدیت رنک');
+        //         }
+        //     } catch (error) {
+        //         showToast('error', 'خطا', error.message);
+        //     } finally {
+        //         hideLoading();
+        //     }
+        // }
 
 
 
