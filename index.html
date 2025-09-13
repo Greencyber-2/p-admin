@@ -1085,7 +1085,7 @@
 
 
         
-                        
+                                
            // نمایش لیست ادمین‌ها
         async function showAdminsList() {
             const adminsContainer = document.getElementById('adminsContainer');
@@ -1100,13 +1100,34 @@
                     if (result.admins.length === 0) {
                         adminsContainer.innerHTML = '<p style="text-align:center;">هیچ ادمینی یافت نشد.</p>';
                     } else {
-                        result.admins.forEach(admin => {
+                        // مرتب‌سازی بر اساس رنک (رتبه بالاتر اول)
+                        const rankOrder = {
+                            'CC Manager': 9,
+                            'CC Director': 8,
+                            'CC Warden': 7,
+                            '(R6)CC Team': 6,
+                            '(R5)Head Of Creator': 5,
+                            '(R4)Contant Creator +': 4,
+                            '(R3)Contant Creator': 3,
+                            '(R2)Video Maker +': 2,
+                            '(R2)Streamer +': 2,
+                            '(R1)Video Maker': 1,
+                            '(R1)Streamer': 1,
+                            '(R0)V.I.P': 0
+                        };
+        
+                        // حذف Developer و مرتب‌سازی
+                        const filteredAdmins = result.admins
+                            .filter(admin => admin.rank !== 'Developer')
+                            .sort((a, b) => (rankOrder[b.rank] || 0) - (rankOrder[a.rank] || 0));
+        
+                        filteredAdmins.forEach(admin => {
                             const card = document.createElement('div');
                             card.className = 'info-card';
                             card.innerHTML = `
                                 <i class="fas fa-user-shield"></i>
                                 <div class="info-card-content">
-                                    <h3>${admin.name || 'نام مشخص نشده'}</h3>
+                                    <h3>${admin.game_name || 'نام مشخص نشده'}</h3>
                                     <p>رنک: ${admin.rank || 'نامشخص'}</p>
                                     <p>ایدی: ${admin.user_id}</p>
                                 </div>
@@ -1141,7 +1162,7 @@
         function hideLoading() {
             document.getElementById('loading').classList.add('hidden');
         }
-        
+
                 
         // // باز کردن پاپ‌آپ تغییر رنک
         // function openRankPopup(userId, currentRank) {
